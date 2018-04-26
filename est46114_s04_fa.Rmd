@@ -1,0 +1,368 @@
+---
+title: Analisis de Componentes Principales (Fundamentos e Inferencia)
+subtitle: Semana 03
+author: Juan Carlos Martinez-Ovando
+institute: Division de Actuaria, Estadistica y Matematicas
+titlegraphic: /svm-sources/ITAM_2016.png
+fontsize: 10pt
+output:
+ ioslides_presentation:
+    smaller: true
+    logo: ~/svm-sources/ITAM_2016.png
+    css: ~/svm-sources/svm-ioslides-css.css    
+ beamer_presentation:
+    template: ~/svm-sources/svm-latex-beamer.tex
+    keep_tex: true
+#toc: true
+    slide_level: 2
+---
+
+## Paquetes
+
+### *Loading*
+
+Cargamos los paquetes que usaremos en estas ilustraciones.
+
+```
+# ripa
+install.packages("ripa", dependencies=c("Depends", "Suggests"))
+# EBImage
+source("http://bioconductor.org/biocLite.R")
+biocLite("EBImage")
+# kernel
+```
+
+```
+if (require("fields") == FALSE){
+  install.packages("fields")
+}
+if (require("mnormt") == FALSE){
+  install.packages("mnormt")
+}
+if (require("MCMCpack") == FALSE){
+  install.packages("MCMCpack")
+}
+if (require("actuar") == FALSE){
+  install.packages("actuar")
+}
+if (require("ggplot2") == FALSE){
+  install.packages("ggplot2")
+}
+library("fields","mnormt","MCMCpack","actuar")
+library("ggplot2")
+library("kernlab")
+library("stats")
+```
+
+```{r loading, include=FALSE}
+if (require("fields") == FALSE){
+  install.packages("fields")
+}
+if (require("mnormt") == FALSE){
+  install.packages("mnormt")
+}
+if (require("MCMCpack") == FALSE){
+  install.packages("MCMCpack")
+}
+if (require("actuar") == FALSE){
+  install.packages("actuar")
+}
+if (require("ggplot2") == FALSE){
+  install.packages("ggplot2")
+}
+library("fields","mnormt","MCMCpack","actuar")
+library("ggplot2")
+library("kernlab")
+library("stats")
+```
+
+# Parte 1 - Fundamentos
+
+## PCA-Fundamentos
+
+### Intuicion
+
+El _analisis de componentes principales_ (o PCA por sus siglas en ingles) es una de las tecnicas de _reduccion de dimensionalidad_ mas empleada en la practica.
+
+Se emplea en diferentes contextos, por ejemplo:
+
+a. Ortogonalizar datos (matrices) (***)
+
+b. Definir modelos de regresion donde $Y=M\beta + \varepsilon$, donde $M$ es un conjunto de componentes de componentes principales de los datos originales $X$
+
+c. Procesamiento y reconstruccion de se;ales e imagenes
+
+d. Construccion de indices (sobre todo en las ciencias sociales)
+
+e. Otras muchas aplicaciones...
+
+## PCA-Fundamentos
+
+### Intuicion
+
+* El Analisis de Componentes Principales (PCA) es una tecnica que comunmente se emplea para realizar **analisis exploratorio de datos** y **reduccion de dimensionalidad**
+
+* Usualmente, PCA se asocia con el siguiente procedimiento
+
+> Tomar un conjunto de observaciones multidimensionales y correlacionadas entre si, reemplazandolas por un numero de NUEVAS observaciones de dimension menor y no correlacionadas
+
+* La interpretacion anterior no es enteramente correcta, pues PCA es mas bien un procedimiento para la **ortogonalizacion de datos correlacionados** en la que
+
+> las nuevas variables son generadas mediante un procedimiento de rotacion de los datos originales, con cada componente dirigido hacia la dimension de los datos originales con la mayor variabilidad
+
+
+## PCA-Fundamentos
+
+### Analisis exploratorio de datos
+
+Supongamos que tenemos un conjunto de datos asociado con $p$ variables $$X_1,\ldots,X_p$$
+
+* La interrelacion entre estas $p$ variables podria visualizarse usando $\frac{p(p-1)}{2}$ diagramas de dispersion (esto solo para visualizar relaciones 1:1 entre las $p$ variables)
+
+* **Con PCA puede obtenerse:**
+
+(a) simplificacion de la informacion contenida en las variables originales, pero en una menor dimension, 
+
+(b) resumen de las dimensiones/variables originales que campuran la mayor cantidad de informacion, asi como la cuantificacion relativa a tal informacion para cada variable
+
+## PCA-Fundamentos
+
+### Formulacion
+
+PCA mapea la informacion de $$(X_1,\ldots,X_p)\rightarrow(Z_1,\ldots,Z_p)$$ 
+
+--$X_j$s correlacionadas, mientras que $Z_j$s no correlacionadas--
+
+**Componentes**
+$$Z_j=<\phi,X>=\phi'X=\sum_{i=1}^{p} \phi_{ji} X_i,$$
+
+* **pesos normalizados**, i.e. $<\phi,\phi> = 1$
+
+* $(\phi_{j1},\ldots,\phi_{jp})$ es el **vector de cargas** del $j$-esimo componente principal (eigenvector)
+
+## PCA-Fundamentos
+
+### Calculo
+
+Considerando un conjunto de datos en forma matricial $X=(X_{ij})_{i=1,j=1}^{n,p}$ de dimension $n\times p$  (considerando $n >> p$)
+
+La contruccion del PCA se obtiene como un **problema de optimizacion**, en le que inicialmente, el **primer componente principal** se define como la solucion a 
+$$
+\max_{\phi_{11},\ldots,\phi_{1p}}\left\{\frac{1}{n}\sum_{i=1}^{n}\left(\sum_{j=1}^{p}\phi_{1j}x_{ij}\right)^{2}\right\}
+\text{ s.a. }
+\sum_{j=1}^{p}\phi_{1j}^2=1.
+$$
+**Nota:** Se supone que las $X_{ij}$s son estandarizadas. De forma que $\frac{1}{n}\sum_{i=1}^{n}X_{ij}=0$, por lo que la funcion objetivo a maximizar puede definirse como $\frac{1}{n}Z_{i1}^2.$
+
+* El ultimo componente se refiere a la varianza muestral de los *scores* $Z_{i1}$s correspondiente a la primera dimension de los nuevos componentes principales.
+
+## PCA-Fundamentos
+
+### **Supuestos**
+
+* **Linealidad:** La nueva base es una combinación lineal de la base original
+
+* **Suficiencia:** La media y la varianza son estadísticas suficientes. PCA supone que estas estadísticas describen totalmente la distribución de los datos a lo largo del eje (es decir, la distribución normal).
+
+* **Variablidad:** Las grandes variaciones tienen una dinámica importante: alta varianza significa señal, baja varianza significa ruido. Esto significa que el PCA implica que la dinámica tiene una alta relación señal / ruido.
+
+* **Ortonormalidad:** Los componentes que se contruyen seran ortonormales, a.k.a. estocastimanete independientes.
+
+Suponemos que la matriz de covarianza muestral de $X$ está dada por $\frac{1}{n-1}(X'X)$.
+
+
+## PCA-Fundamentos
+
+### Algebra Matricial
+
+**La solucion del problema de optizacion puede verse como la solucion a un problema de algebra matricial.**
+
+Si $X$ es el conjunto de datos original, $Z$ es el conjunto de datos transformado (ambos con el tamaño $n \times p$) y $P$ es la transformación lineal ($p \times p$), dada por
+$$
+XP = Z,
+$$
+$P$ puede verse como la matriz que transforma $X$ en $Z$, o como la **transformacion geométrica (rotacion + estiramiento)** que transforma a $X$ en $Z$. 
+
+* Las filas de $P$ son el conjunto de vectores que definen la nueva base para expresar las columnas de $ X $. Estos vectores de fila, si están debidamente definidos, son los componentes _principales_ de $X$. 
+* La matrix $P$ corresponde a la matriz con eigenvectores de la descomposicion espectral de la matriz $\frac{1}{n-1}X'X$.
+
+## PCA-Fundamentos
+
+### Calculo
+
+Consideremos el siguiente conjunto de datos
+
+```{r data, include=FALSE}
+library(stats)
+x <- c(2.5,.5,2.2,1.9,3.1,2.3,2,1,1.5,1.1)
+y <- c(2.4,0.7,2.9,2.2,3.0,2.7,1.6,1.1,1.6,.9)
+
+png("xy_plot.png", 390, 390) 
+plot(x,y, xlim=c(-1,4), ylim=c(-1,4))
+abline(h=0,v=0,lty=3)
+dev.off() 
+```
+
+![Datos originales](xy_plot.png)
+
+## PCA-Fundamentos
+
+### Calculo
+
+Estandarizando los datos por la media (muestral).
+
+```{r data_mean, include=FALSE}
+x1 <- x - mean(x)
+y1 <- y - mean(y)
+
+png("xy_plot_mean.png",390,390)
+plot(x1,y1)
+abline(h=0,v=0,lty=3)
+dev.off()
+```
+
+![Datos estandarizados por la media](xy_plot_mean.png)
+
+## PCA-Fundamentos
+
+### Calculo
+
+Calculamos la matriz de varianzas y covarianzas muestral, junto con su determinante.
+
+```{r data_var, echo=FALSE}
+m <- matrix(c(x1,y1),ncol=2)
+m
+cov.m <- cov(m)
+cov.m
+det.m <- det(cov.m)
+det.m
+```
+
+
+## PCA-Fundamentos
+
+### Calculo
+
+Calculamos los **eigenvectores** y **eigenvalores** de la matriz de covarianzas:
+
+```{r data_eigen, include=TRUE}
+cov.eig <- eigen(cov.m)
+cov.eig
+# verificando ortogonalidad
+cov.eig$vectors[,1] %*% cov.eig$vectors[,2]
+# visualizacion
+```
+
+## PCA-Fundamentos
+
+### Calculo
+
+Visualizamos la descomposicion espectral. La linea `roja` representa el primer componente principal, la `verde` representa el segundo componente principal.
+
+```{r yx_plot_eigen, include=FALSE}
+png("xy_plot_eigen.png",390,390)
+plot(x1,y1); abline(h=0,v=0,lty=3)
+abline(a=0,b=(cov.eig$vectors[1,1]/cov.eig$vectors[2,1]),col="red")
+abline(a=0,b=(cov.eig$vectors[1,2]/cov.eig$vectors[2,2]),col="green")
+dev.off()
+```
+
+![Creacion de nuevos ejes](xy_plot_eigen.png)
+
+## PCA-Fundamentos
+
+### Calculo
+
+* El **primer eigenvector** (linea `roja`) parece un ajuste lineal, que nos muestra como se relaciona con los datos, pero el otro vector propio no parece estar relacionado con los datos ... Por que?
+
+* Si nos fijamos en los **eigenvectores**, el primero es mucho mayor que el segundo: el **eigenvalor** mas grande identifica la componente principal del conjunto de datos.
+
+Una vez encontrados los **eigenvectores**, debemos ordenarlos coin base en sus **eigenvalores**. Esto nos da los componentes por orden de importancia! Podemos decidir ignorar los componentes con menor `significado`/`variabilidad capturada`, sin embargo, perderemos informacion pero no tanto si sus valores son pequenos.
+
+## PCA-Fundamentos
+
+### Calculo
+
+En nuestro ejemplo en 2D, solo tenemos dos opciones para ordenar los **eigenvalores**. Iluestremos este procedimiento:
+
+```{r yx_eigen_orden, echo=TRUE}
+# un componente
+f.vector1 <- as.matrix(cov.eig$vectors[,1],ncol=1)
+f.vector1
+# dos componentes
+f.vector2 <- as.matrix(cov.eig$vectors[,c(1,2)],ncol=2)
+f.vector2
+```
+
+## PCA-Fundamentos
+
+Derivamos el nuevo conjunto de datos transformados. Si $X$ es el conjunto de `datos` originales y $P$ es el vector de atributos, entonces la transpuesta de los datos transformados es
+$X P'$ define a las nuevas variables:
+
+
+```{r}
+# un vector
+final1 <- t(f.vector1) %*% t(m)
+# dos vectores
+final2 <- t(f.vector2) %*% t(m)
+final2
+# nueva matriz de covarianza
+cov(t(final2))
+```
+
+
+## PCA-Fundamentos
+
+### `Nuevos vectores`
+
+Estos conjuntos de datos finales son los datos originales en términos de los vectores que elegimos, es decir, ya no estan sobre los ejes `x` y `y` originales, sino que utilizan los vectores propios elegidos como su nuevo eje.
+
+```{r include=FALSE}
+# final1 unidimensional
+t(final1) 
+# final2 bidimensional
+png("yx_plot_eigen2.png",390,390)
+plot(final2[1,],final2[2,],ylim=c(-2,2));abline(h=0,v=0,lty=3)
+dev.off()
+```
+
+![Datos estandarizados por la media](yx_plot_eigen2.png)
+
+## PCA-Fundamentos
+
+### Recuperando `vectores originales`
+
+Recuperando los datos originales...
+
+```{r}
+# con todos los eigenvectores - recuperacion al 100% (como en final2)
+original.dataset2 <- t(f.vector2 %*% final2)
+original.dataset2[,1] <- original.dataset2[,1] + mean(x)
+original.dataset2[,2] <- original.dataset2[,2] + mean(y)
+original.dataset2
+```
+
+## PCA-Fundamentos
+
+### Recuperando `vectores originales`
+
+```{r include=FALSE}
+png("xy_plot_back.png",390,390)
+plot(original.dataset2[,1],original.dataset2[,2],xlim=c(-1,4),ylim=c(-1,4))
+abline(h=0,v=0,lty=3)
+dev.off()
+```
+
+![Volviendo a los datos orginales](xy_plot_back.png)
+
+## PCA-Fundamentos
+
+### Que sigue?
+
+* Construir PCA incorporando **incertidumbre epistemica** (a.k.a. error de estimacion de la matriz de covarianzas)
+
+* Extender PCA para **objetos no matriciales** (e.g. `imagenes` o `textos`)
+
+* Vincular PCA con `analisis de factores` y `analisis de correlacion canonica`
+
+* Definir PCA para datos `ralos` (i.e. `sparce data`)

@@ -1,0 +1,115 @@
+\documentclass[12pt]{exam}
+\usepackage[utf8]{inputenc}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{multicol}
+\usepackage{color}
+
+\newcommand{\class}{EST-46114 M\'etodos Multivariados}
+\newcommand{\term}{Primavera 2018}
+\newcommand{\type}{Algoritmos}
+\newcommand{\algonum}{Modelo Bayesiano de Factores}
+\newcommand{\examdate}{Entrega 28/Feb/2018}
+\newcommand{\algodate}{28/Feb/2018}
+\newcommand{\timelimit}{60 Minutes}
+
+\pagestyle{head}
+%\firstpageheader{}{}{}
+%\runningheader{\class}{\examnum\ - Pag. \thepage\ de \numpages}{\examdate}
+\runningheadrule
+
+
+\begin{document}
+
+\noindent
+\begin{tabular*}{\textwidth}{l @{\extracolsep{\fill}} r @{\extracolsep{6pt}} l}
+\textbf{\class} & & \\
+\textbf{\type} & & \textbf{\algonum}\\
+\textbf{\term} & & \algodate \\
+%\textbf{\examdate} &&\\
+%\textbf{Time Limit: \timelimit} & Teaching Assistant & \makebox[2in]{\hrulefill}
+\end{tabular*}\\
+\rule[2ex]{\textwidth}{2pt}
+
+\section{Modelo}
+
+Para un conjunto de observaciones $p$-dimensionales, $(y_t)_{t=1}^{n}$, organizados en forma matricial en $Y$ matriz de dimensi\'on $n\times p$, se especifica el modelo bayesiano de factores como,
+\begin{eqnarray}
+y_t|\beta,f_t,\Sigma &\sim& N_p(y|\beta'f_t,\Sigma)
+\end{eqnarray}
+donde $\beta$ es la matriz ortogonal (columnas) de $k$ cargas de dimensi\'on $p\times k$, $f_t$ es un vector de factores latentes $k$-dimensional, para $t=1,\ldots,n$ y $\Sigma$ es una matriz positiva definida sim\'etrica de dimensi\'on $p\times p$. Adcionalmente, el modelo supone,
+$$
+f_f \sim N_k(f|0,I_k),
+$$
+donde $I_k$ denota la matriz diagonal de dimensi\'on $k\times k$.
+
+En este modelo, la varianza marginal de $y_t$ se calcula como $\Omega=\Sigma+\beta \beta'.$
+
+Los par\'ametros del modelo son $\beta$ y $\Sigma$, mientras que las variables latentes con $(f_t)_{t=1}^{n}$.
+
+\subsection{Prior}
+
+Para hacer inferencia bayesiana, sobre la clase de par\'ametros, se necesita complementar el modelo con la distribuci\'on incial. Tradicionalmente se supone que $\beta$ y $\Sigma$ son mutuamente independientes enre si, por lo que la prior puede descomponerse como
+$$
+\pi(\beta,\Sigma)=\pi(\beta)\pi(\Sigma)
+$$ 
+donde 
+$$
+\pi(\beta)=\prod_{i=1}^{p}\prod_{j=1}^{k}\pi(\beta_{ij}),
+$$
+donde $\pi(\beta_{ij})=N(\beta_{ij}|0,c)$, si $i\neq j$, y $\pi(\beta_{ij})=N(\beta_{ij}|0,c)\mathbb{I}(\beta_{ij} > 0)$, si $i=j$, con $c>0$ dado, y
+$$
+\pi(\Sigma)=Wi-Inv(\Sigma|n_0,S_0),
+$$ 
+con $n_0$ y $S_0$ dados.
+ 
+\subsection{Posterior}
+Para un conjunto de datos observados, $(y_t)_{t=}^{n}$, la distriuci\'on final sobre par\'ametros y variables latentes tiene el siguiente kernel asociado,
+$$
+\pi\left(\beta,\Sigma,(f_t)_{t\geq 1}|\text{datos}\right)
+\propto
+\prod_{t=1}^{n}N_p(y_t|\beta f_t,\Sigma) N_{k}(f_t|0, I_k) \times \prod_{i=1}^{p}\prod_{j=1}^{k}\pi(\beta_{ij}) Wi-Inv(\Sigma|n_0,S_0),
+$$ 
+para la cual la constante de normalizaci\'on no es obtenible anal\'itcamente.
+
+\section{Algoritmo}
+En esta secci\'on describimos un algoritmo de Gibbs sampler para obtener datos simulados de la distribuci\'n posterior del modelo para par\'ametros y variables latentes.
+
+Los par\'metros del algoritmo son los siguientes:
+\begin{enumerate}
+\item $M$ que el n\'umero de datos por simular en el Gibbs sampler
+\item $c$, $n_0$ y $S_0$ que son los hiperpar\'ametros de la {\it prior}
+\end{enumerate}
+
+El input del algoritmo, son los datos $Y$.
+
+El output del algoritmo es la colescci\'on de $M$ simulaciones de la distribuci\'on porterior, i.e. 
+$$
+\left\{\beta^{(m)},\Sigma^{(m)},(f_t^{(m)})_{t\geq 1}\right\}_{m=1}^{M},
+$$
+las cuales se obtienen del siguiente proceso iterativo:
+\begin{enumerate}
+\item En el paso inicial, para $m=0$, fijar valores iniciales $\beta^{(0)}$, $\Sigma^{(0)}$, y $(f_t^{(0)})_{t\geq 1}$.
+
+--En teor\'ia, el desempe\~no del algoritmo debe ser irrestricto a la elecci\'on de estos valores iniciales.--
+
+\item En las iteraciones subsecuentes del algoritmo, para $m=1,2,\ldots,M$, se simulan los datos por bloques, para los par\'ametros,
+\begin{eqnarray}
+\beta^{(m)}|\Sigma^{(m-1)}, (f_t^{(m-1)})_{t\geq 1} 
+	&\sim & \prod_{ij}\pi(\beta_{ij}|\ldots)\\
+\Sigma^{(m)}|\beta^{(m)}, (f_t^{(m-1)})_{t\geq 1} 
+	&\sim & \prod_{ij}\pi(\sigma_{ij}|\ldots),
+\end{eqnarray}
+las cuales pueden factorisarse de manera simple, y para las variables latentes, incorporamos un proceso iterativo adicional sobre las $t$s, como
+\begin{eqnarray}
+f_t|\ldots & \sim & N_{k}\left(f_t|
+A t(\beta^{(m)})solve(\Sigma^{(m)})y_t,
+A
+\right)
+\end{eqnarray}
+donde $$A=\left(I_{k}+t(\beta^{(m)})solve(\Sigma^{(m)})\beta^{(m)}\right)^{-1},$$
+con $t(\beta^{(m)})$ denotando la transpuesta de $\beta^{(m)}$ y $solve(\Sigma^{(m)})$ la inversa de $\Sigma^{(m)}$.
+\end{enumerate}
+En cada iteraci\'on es recomendable almacenar las variables simuladas en repositorios independientes, para posteriormente hacer inferencia y/o predicci\'on con ellas.
+\end{document}

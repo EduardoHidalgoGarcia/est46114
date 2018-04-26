@@ -1,0 +1,95 @@
+---
+title: "S09: Modelos de grafos probabilisticos"
+author: "Juan Carlos Martinez-Ovando"
+date: "Primavera 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+----------------------------------
+
+----------------------------------
+
+### **Resumen y objetivos**
+
+* Revisaremos estructuras probabilisticas que pueden definirse al rededor de objetos `grafos`
+
+* Revisaremos aspectos inferenciales relacionados con el aprendizaje estadistico en estructuras de `grafos probabilisticos`
+
+----------------------------------
+
+----------------------------------
+
+# Grafos probabilisticos
+
+Hemos visto que los `grafos` son herramientas intuitivas para la visualizacion de relaciones entre variables (ya sea a nivel `objeto` o entre `objetos`). En los `grafos` hemos identificado:
+
+* Cada `nodo` representa una variable (i.e. medicion particular de un objeto o el objeto mismo)
+
+* La relacion entre `nodos` esta representada por `ligas` de conexion
+
+* Las `ligas` de conexion pueden indicar `relaciones simetricas` o `relaciones asimetricas`, dependiendo de la direccion de las `ligas`
+
+Un `grafo probabilistico` emplea las relaciones de un `grafo` normal e introduce en las `ligas de conexion` una **medida de probabilidad** para cuantificar el grado de conectividad entre valores especificos de los nodos
+
+Asi, las **relaciones probabilisticas** entre los valores especificos de dos `nodos` $\{i,j\}$, donde los valores especificos son $X_i$ y $X_j$ se definen como:
+
+a. $\mathbb{P}(X_i,X_j)=\mathbb{P}(X_i|X_j)\mathbb{P}(X_j)=\mathbb{P}(X_j|X_i)\mathbb{P}(X_i)=$ si la relacion es **simetrica**
+
+b. $\mathbb{P}(X_i,X_j)=\mathbb{P}(X_i|X_j)\mathbb{P}(X_j)$ si la relacion es **asimetrica** $$X_j \rightarrow X_i$$ 
+
+c. $\mathbb{P}(X_i,X_j)=\mathbb{P}(X_j|X_i)\mathbb{P}(X_i)$ si la relacion es **asimetrica** $$X_i \rightarrow X_j$$ 
+
+Una vez definidas estas relaciones probabilisticas, usualmente imponemos una estructura parametral de la siguiente forma:
+$$\mathbb{P}(X_i,X_j)=F(X_i,X_j|\theta_{ij},\gamma),$$
+donde 
+
+ - $\theta_{ij}$ es un parametro `local` para los nodos conectados `(i,j)`
+ 
+ - $\gamma$ es un parametro general para todos los `nodos`
+
+ - $F$ es una funcion de probabilidad
+ 
+La direccionalidad de la relacion esta asociada con la forma funcional de `F`, que es una **funcion de distribuciones de probabilidades**.
+
+## Independencia condicional
+
+Cuando un grafo cuenta con un conjunto de nodos, $\{1,\ldots,n\}$ para los cuales se tienen asociados valores especificos, $\{X_1,\ldots,X_n\}$, podemos pensar en estructuras de **dependencia estocastica** entre conjuntos de `variables` o `nodos`, i.e. para todo $i=1,\ldots,n$ tenemos que 
+$$\mathbb{P}(X_i|X_{-i})=F(X_i|X_{\delta(i)},\theta_i,\gamma),$$
+donde 
+
+ - $X_{-i}$ denota el conjunto de variables en el grafo con excepcion de la $i$-esima variable
+
+ - $X_{\delta(i)}$ denota un conjunto de variables asociado con el conjunto de `nodos` conectados con el $i$-esimo (i.e. los `vecinos` de la $i$-esima coordenada o `nodo` del grafo) 
+ 
+ - $\theta_i$ es el parametro local
+ 
+ - $\gamma$ parametro global
+ 
+ Al rededor de la estructura anterior podemos pensar en la nocion de **independencia estocastica** entre dos `nodos` $\{i,j\}$ para sus variables $X_i$ y $X_j$, condicional en la informacionm compartida para ambas, dada por sus vecindades $X_{\delta(i,j)}$ **si y solo si**
+ $$F(X_i,X_j|X_{\delta(i,j)},\theta_{i,j},\gamma)
+ =
+ F(X_i|X_{\delta(i,j)},\theta_{i,j},\gamma)
+ \times
+ F(X_j|X_{\delta(i,j)},\theta_{i,j},\gamma).$$
+ 
+La **independencia estocastica marginal** entre $X_i$ y $X_j$ se obtiene cuando la anterior relacion se cumple con $X_{\delta(i,j)}=\emptyset$.
+
+### Tipos de grafos probabilisticos
+ 
+#### A. Grafos no dirigidos
+
+#### B. Grafos dirigidos
+ 
+#### C. Grafos de factores
+
+### Referencias
+
+ - **Bishop** - Pattern Recognition and Machine Learning (capitulo 3) 
+
+ - **Jordan & Weiss** - Probabilistic Inference in Graphical Models
+
+ - **Heckerman** - Graphical Models: Structure Learning

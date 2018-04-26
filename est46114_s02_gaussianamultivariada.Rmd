@@ -1,0 +1,362 @@
+---
+output: 
+  pdf_document:
+    citation_package: natbib
+    keep_tex: true
+    fig_caption: true
+    latex_engine: pdflatex
+    template:  C:/Users/jcmo/Dropbox/svm-sources/svm-latex-ms.tex
+title: "S02 - Distribución Gaussiana Multivariada"
+#thanks: "Agradecimientos..."
+author: 
+- name: "Juan Carlos Martinez-Ovando"
+  affiliation: ITAM
+abstract: " "
+keywords: "Graphical models, text analytics, contingency tables."
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: margin=1in
+fontfamily: mathpazo
+fontsize: 11pt
+# spacing: double
+#bibliography: C:/Users/jcmo/Dropbox/@BibTeX/ReferencesJCMO.bib
+#biblio-style: apsr
+endnote: no
+---
+
+## Paquetes
+
+### *Loading*
+
+Cargamos los paquetes que usaremos en estas ilustraciones.
+
+```{r loading}
+if (require("mvtnorm") == FALSE){
+  install.packages("mvtnorm")
+}
+if (require("MASS") == FALSE){
+  install.packages("mvtnorm")
+}
+library("mvtnorm","MASS")
+```
+
+# Parte 1 - Teoria
+
+## Definicion
+
+### Caso Univariado ($p=1$)
+
+Iniciamos con la distribucion gaussiana unidimensional, acompanada por una funcion de densidad de probabilidad,
+
+$$
+f(x|\mu,\sigma^2)
+= 
+(2\pi)^{-1/2} \sigma^{-1} \exp\left\{-(1/2\sigma^2) (x-\mu)^2\right\}
+$$
+con soporte en $\Re$ para $x$. 
+
+* El espacio parametral para ($\mu$,$\sigma^2$) es $\Re \times \Re_{+} $.
+
+## Definicion
+
+### Caso mulvivariado ($p<\infty$)
+
+El caso multivariado es una extension del univariado para $\boldsymbol{x}=(x_1,\ldots,x_p)$, pero que toma en cuenta las interacciones entre las $x_i$s. Esta tiene una funcion de densidad conjunta dada por,
+
+$$
+f(\boldsymbol{x}|\boldsymbol{\mu},\boldsymbol{\Sigma})
+= 
+(2\pi)^{-p/2} \det(\boldsymbol{\Sigma})^{-1/2} \exp\left\{-\frac{1}{2} (\boldsymbol{x}-\boldsymbol{\mu})'\boldsymbol{\Sigma}^{-1}(\boldsymbol{x}-\boldsymbol{\mu})\right\},
+$$
+con soporte en $\Re^{p}$ para $\boldsymbol{x}$. 
+
+* El espacio parametral para $(\boldsymbol{\mu},\boldsymbol{\Sigma})$ es $\Re^p \times \mathcal{M}_p$, donde $\mathcal{M}_p$ denota el espacio de todas las matrices de dimension $p \times p$ positivo definidas y simetricas. 
+
+* Se denota como $\boldsymbol{X} \sim N(\boldsymbol{x}|\boldsymbol{\mu},\boldsymbol{\Sigma})$.
+
+* El numero de parametros "independientes" en $\boldsymbol{\mu}$ es igual a $p$, mientras que el numero de parametros independientes en $\boldsymbol{\Sigma}$ es igual a $p(p+1)/2$.
+
+## Propiedades
+
+### Propiedades basicas
+
+Si $\boldsymbol{X} \sim N(\boldsymbol{x}|\boldsymbol{\mu},\boldsymbol{\Sigma})$ entonces, 
+
+**P1.** Cualquier combinacion lineal de $\boldsymbol{X}$ es gaussiana multivariada, i.e. para todo $A$ matriz de dimension $q\times p$ y $c$ vector de dimension $q \times 1$ se tiene que 
+$$
+\boldsymbol{Y}\sim N(\boldsymbol{y}|\boldsymbol{\mu}_y,\boldsymbol{\Sigma}_y),
+$$
+con soporte para $\boldsymbol{y}$ en $\Re^{q}$, tal que
+
+$$
+\boldsymbol{\mu}_y = A\boldsymbol{\mu} + c,
+$$
+y
+$$
+\boldsymbol{\Sigma}_y = A\boldsymbol{\Sigma}A'.
+$$
+
+
+## Propiedades
+
+### Propiedades basicas
+
+Si $\boldsymbol{X} \sim N(\boldsymbol{x}|\boldsymbol{\mu},\boldsymbol{\Sigma})$ entonces, 
+
+**P2.** Cualquier subconjunto de $\boldsymbol{X}$  tiene una distribucion gaussiana multivariada, i.e. si $\boldsymbol{X}_{s}=(X_{s(1)},\ldots,X_{s(q)})$ (con $q<p$) es un subconjuno de $\boldsymbol{X}$ para un subconjunto de indices $\{s(1),\ldots,s(q)\}$ de $\{1,\ldots,p\}$, entonces
+
+$$
+\boldsymbol{X}_{s} 
+\sim
+N(\boldsymbol{x}_{s}|\boldsymbol{\mu}_{s} ,\boldsymbol{\Sigma}_{s}),
+$$
+donde 
+$$
+\boldsymbol{\mu}_s=(\mu_{s(1)},\ldots,\mu_{s(q)}),
+$$
+y
+$$
+\boldsymbol{\Sigma}_s=\left(\sigma_{s(i)s(j)}\right)_{i,j=1}^{q}.
+$$
+
+## Propiedades
+
+### Propiedades basicas
+
+Si $\boldsymbol{X} \sim N(\boldsymbol{x}|\boldsymbol{\mu},\boldsymbol{\Sigma})$ entonces, 
+
+**P3.** Si un subconjunto de $\boldsymbol{X}$  no esta correlacionado, entonces las variables de ese conjunto son *estocasticamente independientes*, i.e. 
+
+* Si $(X_i,X_j)$ son un subconjunto de $\boldsymbol{X}$ (con $i,j<p$), tales que $$\sigma_{i,j}=0,$$
+entonces $X_i$ y $X_j$ son independientes estocasticamente con,
+$$
+f(x_i,x_j|\mu_i,\mu_j,\sigma_{ii},\sigma_{jj},\sigma_{ij}) = N(x_i|\mu_i,\sigma_{ii})\times N(x_j|\mu_j,\sigma_{jj}).
+$$
+
+## Propiedades
+
+### Propiedades basicas
+
+Si $\boldsymbol{X} \sim N(\boldsymbol{x}|\boldsymbol{\mu},\boldsymbol{\Sigma})$ entonces, 
+
+**P4.** Si un $A$ y $B$ son dos matrices de dimension ($q\times p$) tales que 
+$$
+A\boldsymbol{\Sigma}B' = \boldsymbol{0},
+$$
+de dimension $q\times q$, entonces
+
+* las variables 
+$$
+\boldsymbol{Y}_A = A\boldsymbol{X} \ \text{ y } \
+\boldsymbol{Y}_B = B\boldsymbol{X},
+$$ son *estocasticamente independientes*.
+
+## Condicionamiento
+
+### Distribuciones condicionales
+
+Supongamos que $\boldsymbol{X}=(\boldsymbol{X}_1,\boldsymbol{X}_2)$, donde ambos componentes son de dimension $p_1$ y $p_2$ respectivamente ($p=p_1+p_2$).
+
+* Lo anterior se conoce como una particion de dos componentes de $\boldsymbol{X}$.
+
+* Los parametros del modelo tambien estan particionados, i.e.
+$$
+\boldsymbol{\mu} = (\boldsymbol{\mu}_1,\boldsymbol{\mu}_2).
+$$
+
+$$
+\boldsymbol{\Sigma} = 
+\left(
+\begin{array}{cc}
+\boldsymbol{\Sigma}_{11} & \boldsymbol{\Sigma}_{12} \\
+\boldsymbol{\Sigma}_{21} & \boldsymbol{\Sigma}_{22}
+\end{array}
+\right).
+$$
+
+* La *distribucion marginal* de $\boldsymbol{X}_i$ ($i=1,2$ ) es
+$$
+\boldsymbol{X}_i \sim N(\boldsymbol{x}_i|\boldsymbol{\mu}_i,\boldsymbol{\Sigma}_i).
+$$
+
+## Condicionamiento
+
+### Distribucion condicional $\boldsymbol{X}_2|\boldsymbol{X}_1=\boldsymbol{x}_1$
+
+**P5.** La distribucion condicional de $\boldsymbol{X}_2$ dado $\boldsymbol{X}_1=\boldsymbol{x}_1$ es gaussiana multivariada, con 
+$$
+\boldsymbol{X}_2|\boldsymbol{X}_1=\boldsymbol{x}_1
+\sim
+N\left(\boldsymbol{x}_2|\boldsymbol{\mu}_{2|1},\boldsymbol{\Sigma}_{2|1}\right),
+$$
+donde 
+$$
+\boldsymbol{\mu}_{2|1} = \boldsymbol{\mu}_2 + \boldsymbol{\Sigma}_{21}\boldsymbol{\Sigma}_{11}^{-1}(\boldsymbol{x}_1-\boldsymbol{\mu}_1),
+$$
+y
+$$
+\boldsymbol{\Sigma}_{2|1} = \boldsymbol{\Sigma}_{22} - \boldsymbol{\Sigma}_{21}\boldsymbol{\Sigma}_{11}^{-1}\boldsymbol{\Sigma}_{12}.
+$$
+ 
+* Esta propiedad es simetrica, en el sentido que la distribucion condicional de $\boldsymbol{X}_1|\boldsymbol{X}_2=\boldsymbol{x}_2$ es analoga.
+
+## Descomposicion
+
+### Estructura espectral
+
+**Definicion.-** Una matrix $P$ de dimension $p\times p$ es *ortogonal* si $P P' = P' P=I$.
+
+**TEOREMA:** Una matrix $A$ simetrica de dimension $p\times p$ puede reexpresarse como $$A=P \Lambda P',$$
+donde 
+
+* $\Lambda = diag\{\lambda_1,\ldots,\lambda_p\}$ de *eigenvalores*
+
+* $P$ es una matriz ortogonal de eigenvectores columna.
+
+**INTUICION**
+
+* La matriz de *eigenvalores* representa *rotaciones* de coordenadas.
+
+* La matriz de *eigenvalores* representan *contracciones* o *expansiones* de coordenadas.
+
+
+## Descomposicion
+
+### Acerca de determinantes
+
+**PROPIEDAD.-** Bajo la descomposicion espectral de $\boldsymbol{\Sigma}$ se sigue $$\det(\boldsymbol{\Sigma})=\prod_{j=1}^{p}\lambda_j.$$
+
+**INTUICION**
+
+* Los *eigenvalores* de $\boldsymbol{\Sigma}$ nos indican el grado de variabilidad de cada dimension (por separado)
+
+* Los $\lambda_j$s nos indican que tan expandida/contraida es la distribucion en esta dimension
+
+* El factor $\det(\boldsymbol{\Sigma})$ puede verse como un factor de expansion/contraccion de la distribucion gaussiana conjunta
+
+
+## Visualizacion
+
+### Contornos
+
+La grafica de **contornos** nos permiten visualizar distribuciones gaussianas de dos dimensiones (i.e. es una representacion de graficas en 3D).
+
+Los *contronos* se obtienen como *rebanadas* de la densidad conjunta en 2D.
+
+Las lineas representan la coleccion de valores de $\boldsymbol{x}$ que comparten el mismo nivel de $N(\boldsymbol{x}|\mu,\Sigma)$.
+
+**Propiedad.-** Los contornos se definen en terminos de $\Lambda$ y $P$ como **elipsoides** $$||\boldsymbol{\Sigma}^{-1/2}(\boldsymbol{x}-\boldsymbol{\mu})||=c^{2},$$
+siendo centradas en $\boldsymbol{\mu}$ y con ejes en la direccion $\sqrt{\lambda_j p_j}$.
+
+## Visualizacion
+### Contornos
+
+Visualizacion de datos por contornos con **dependencia nula**.
+
+```{r plot_contorno_sim_nule, include=TRUE}
+x.points <- seq(-3,3,length.out=100)
+y.points <- x.points
+z <- matrix(0,nrow=100,ncol=100)
+mu <- c(0,0)
+sigma <- matrix(c(2,0,0,1),nrow=2)
+for(i in 1:100){
+  for(j in 1:100){
+    z[i,j] <- dmvnorm(c(x.points[i],y.points[j]),
+                      mean=mu,sigma=sigma)
+    }
+}
+png("C:/Users/jcmo/Google Drive/Material.Cursos/EST46114/Sesiones/est46114/figuras/contour_nula.png", 490, 490)
+contour(x.points,y.points,z)
+dev.off()
+```
+
+## Visualizacion
+
+![Contornos de distribucion gausiana.](C:/Users/jcmo/Google Drive/Material.Cursos/EST46114/Sesiones/est46114/figuras/contour_nula.png)
+
+## Visualizacion
+### Contornos
+
+Visualizacion de datos por contornos con **dependencia positiva.**
+
+```{r plot_contorno_sim_positive, include=TRUE}
+x.points <- seq(-3,3,length.out=100)
+y.points <- x.points
+z <- matrix(0,nrow=100,ncol=100)
+mu <- c(0,0)
+sigma <- matrix(c(2,1,1,1),nrow=2)
+for(i in 1:100){
+  for(j in 1:100){
+    z[i,j] <- dmvnorm(c(x.points[i],y.points[j]),
+                      mean=mu,sigma=sigma)
+    }
+}
+png("C:/Users/jcmo/Google Drive/Material.Cursos/EST46114/Sesiones/est46114/figuras/contour_positiva.png", 490, 490)
+contour(x.points,y.points,z)
+dev.off()
+```
+
+## Visualizacion
+
+![Contornos de distribucion gausiana con covarianza positiva](C:/Users/jcmo/Google Drive/Material.Cursos/EST46114/Sesiones/est46114/figuras/contour_positiva.png)
+
+## Visualizacion
+### Contornos
+
+Visualizacion de datos por contornos con **dependencia negativa.**
+
+```{r plot_contorno_sim_negative, include=TRUE}
+x.points <- seq(-3,3,length.out=100)
+y.points <- x.points
+z <- matrix(0,nrow=100,ncol=100)
+mu <- c(0,0)
+sigma <- matrix(c(2,-1,-1,1),nrow=2)
+for(i in 1:100){
+  for(j in 1:100){
+    z[i,j] <- dmvnorm(c(x.points[i],y.points[j]),
+                      mean=mu,sigma=sigma)
+    }
+}
+png("C:/Users/jcmo/Google Drive/Material.Cursos/EST46114/Sesiones/est46114/figuras/contour_negativa.png", 490, 490)
+contour(x.points,y.points,z)
+dev.off()
+```
+
+## Visualizacion
+
+![Contornos de distribucion gausiana con covarianza positiva](C:/Users/jcmo/Google Drive/Material.Cursos/EST46114/Sesiones/est46114/figuras/contour_negativa.png)
+
+# Parte 2 - Practica
+
+
+## Exploracion 1:1
+
+```{r summary, echo=TRUE}
+data01 <- read.csv(file="C:/Users/jcmo/Google Drive/Material.Cursos/EST46114/Sesiones/est46114/datos/est46114_semana02.csv",header=TRUE)
+summary(data01)
+X <- cbind(data01$X1,data01$X2)
+```
+
+## Visualizacion
+### Nubes
+
+Scatter plot (nube de datos eliptica)
+```{r plot_nube}
+plot(X)
+```
+
+## Verosimilitud
+
+La funcion de verosimilitud para $(\mu,\Sigma)$ condicional en un conjunto de datos, $\boldsymbol{x}_1,\ldots,\boldsymbol{x}_n$ se calcula como la distribucion conjunta de los $n$ datos, la cual toma la forma
+$$
+l(\mu,\Sigma|\boldsymbol{x}_1,\ldots,\boldsymbol{x}_n) = \prod_{i}N(\boldsymbol{x}_i|\mu,\Sigma) \\
+\propto |\Sigma|^{-n/2}\exp\left\{-\frac{1}{2}\sum_{i}(x_i-\mu)'\Sigma^{-1}(x_i-\mu)\right\}\\
+\propto |\Sigma|^{-n/2}\exp\left\{-\frac{1}{2}tr\left(\Sigma^{-1}(S+dd')\right)\right\},
+$$
+donde $d=\bar{x}-\mu$ y $S$ es la matriz de covarianzas muestral.
+
+## Verosimilitud
+
+### Computo
+
+
+La funcion de verosimilitud para $(\mu,\Sigma)$ condicional en un conjunto de 

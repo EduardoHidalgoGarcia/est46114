@@ -1,0 +1,388 @@
+---
+title: Analisis de Correlacion Canonica (Fundamentos e Inferencia)
+subtitle: Semana 05
+author: Juan Carlos Martinez-Ovando
+institute: Division de Actuaria, Estadistica y Matematicas
+titlegraphic: /svm-sources/ITAM_2016.png
+fontsize: 10pt
+output:
+ ioslides_presentation:
+    smaller: true
+    logo: ~/svm-sources/ITAM_2016.png
+    css: ~/svm-sources/svm-ioslides-css.css    
+ beamer_presentation:
+    template: ~/svm-sources/svm-latex-beamer.tex
+    keep_tex: true
+#toc: true
+    slide_level: 2
+---
+
+# Parte 1 - Fundamentos
+
+## Objetivo
+
+El **analisis de correlacion canonica** (`CCA`) es una tecnica estadistica que estudia la asociacion de dos conjuntos de variables simultaneamente observadas para el mismo conjunto de individuos o unidades de observacion
+
+Usos de `CCA`:
+
+a. Reduccion de dimensionalidad (explicando el comovimiento de dos variables en un conjunto de combinaciones lineales de dimensiones menores)
+
+b. Exploracion de datos (mediante la creacion de `atributos latentes` o `variables canonicas` que explican el comovimiento de un conjunto de variables)
+
+## Notacion
+
+Suponemos $X$ y $Y$ dos conjuntos de variables de dimension $p$ y $q$ respectivamente, con 
+
+$$
+X\sim N(\mu_x,\Sigma_x) \ \text{ y } \ Y\sim N(\mu_y,\Sigma_y)
+$$
+Si $\Sigma_{xy}$ denota la covarianza entre $X$ y $Y$ entonces,
+$$
+Z=(X,Y) \sim N(\mu,\Sigma),
+$$
+con $$\mu=(\mu_x,\mu_y)$$ y 
+$$
+\Sigma = \left( \begin{array}[c c] \Sigma_{x} & \Sigma_{xy}\\ \Sigma_{yx} & \Sigma_{y}\end{array}\right).
+$$
+
+## Combinaciones lineales
+
+Para $j=1,\ldots,r$, con $r=\min(p,q)$, se definen las variables unidimensionales
+$$
+u_j = <X,a_j>, \\
+v_j = <Y,b_j>,
+$$
+para $a_j$ y $b_j$ vectores $p$ y $q$ dimensionales, respectivamente.
+
+La **idea** es que estas nuevas variables 
+$$U=(u_1,\ldots,u_r) \ \text{ y } \ V=(v_1,\ldots,v_r)
+$$
+resuman la correlacion implicita entre $X$ y $Y$ a traves de la especificacion cuidadosa de los *vectores de proyeccion* $(a_j,b_j)_{j=1}^{r}$.
+
+## `CCA` definicion
+
+Para $j=1$ se eligen $a_1$ y $b_1$ tales que 
+
+1. $corr(U_1,V_1)=\frac{a_1'\Sigma_{xy}b_1}{(a_1\Sigma_x a_1)^{1/2}(b_1\Sigma_y b_1)^{1/2}}$ sea *maxima*
+
+2. sujeto a que $var(U_1)$ y  $var(V_1)$ sean ambas unitarias.
+
+Para $j\geq 2$ se eligen $a_j$ y $b_j$ tales que 
+
+1. $corr(U_j,V_j)=\frac{a_j'\Sigma_{xy}b_j}{(a_j\Sigma_x a_j)^{1/2}(b_j\Sigma_y b_j)^{1/2}}$ sea *maxima*
+
+2. sujeto a que $var(U_j)$ y$var(V_j)$ sean ambas unitarias
+
+3. $corr\left((u_j,v_j),(u_l,v_l)\right)=0$ para todo $l<j$.
+
+**Nota: `CCA` es en esencia un problema de optimizacion cuadratica con restricciones.**
+
+## `CCA` solucion matricial
+
+Resulta ser que las $j$-esimas **variables canonicas** estan dadas por
+$$
+U_j = e_{xj}'\Sigma_x^{-1/2}X \ \text{ y } \ V_j=e_{xj}'\Sigma_y^{-1/2} Y,
+$$
+donde $e_{xj}$ y $e_{yj}$ son vectores $p$ y $q$ dimensionales, respectivamente, que corresponden al $j$-esimo **eigenvector de las matrices**,
+$$
+\Sigma_{x}^{-1/2}\Sigma_{xy}\Sigma_y^{-1}\Sigma_{yx}\Sigma_{x}^{-1/2}, \\
+\Sigma_{y}^{-1/2}\Sigma_{yx}\Sigma_x^{-1}\Sigma_{xy}\Sigma_{y}^{-1/2}, \\
+$$
+respectivamente.
+
+
+**Nota:** El $j$-esimo eigenvector $\rho_j$ de las matrices arriba corresponde con la **correlacion entre las variables canonicas**  correspondientes, $U_j$ y $V_j$. 
+
+## `CCA` variables canonicas
+
+Las nuevas **variables canonicas** se definen como
+$$
+U = A'X \ \text{ y } \ V = B'Y,
+$$
+ambas de dimension $r$, donde 
+$$
+A=(a_1',\ldots,a_r'),\\
+B=(b_1',\ldots,b_r'),
+$$ de dimensiones $(r\times p)$ y $(r\times q)$, respectivamente. 
+
+# Parte 2 - Implementacion
+
+## Paquetes
+
+### *Loading*
+
+Cargamos los paquetes que usaremos en estas ilustraciones.
+
+```
+if (require(ggplot2) == FALSE){
+  install.packages("ggplot2")
+}
+library("ggplot2")
+
+if (require(GGally) == FALSE){
+  install.packages("GGally")
+}
+library("GGally")
+
+if (require(CCA) == FALSE){
+  install.packages("CCA")
+}
+library("CCA")
+```
+```{r include=FALSE}
+if (require(ggplot2) == FALSE){
+  install.packages("ggplot2")
+}
+library("ggplot2")
+
+if (require(GGally) == FALSE){
+  install.packages("GGally")
+}
+library("GGally")
+
+if (require(CCA) == FALSE){
+  install.packages("CCA")
+}
+library("CCA")
+```
+
+## Datos
+
+Los datos que analizamos corresponden a 600 registros de estudiantes relacionados con sus habilidades academicas, capacidades emocionales y actitud.
+ 
+ * **actitud** - `control`, `concepto`, `motivacion`
+ 
+ * **habiliades** - `lectura`, `escritura`, `matematicas`, `ciencias`
+
+ * **intrinsecas** - `genero`
+ 
+
+### Objetivo
+  
+  Resumir como estas variables en bloque se relacionan entre si.
+  
+## Datos
+
+```{r}
+datos <- read.csv("est46114_ccadata.csv", header = TRUE)
+colnames(datos)
+head(datos)
+dim(datos)
+```
+
+## Datos
+
+```{r}
+plot(datos)
+```
+
+## Datos
+
+Considerando el conjunto de `datos`, se requiere especificar dos conjuntos de variables. En este ejemplo, dividiremos en dos bloques:
+
+a. `aptitud`+/-`genero`
+
+```{r}
+aptitud <- datos[,c("control","concepto","motivacion" )]
+summary(aptitud)
+```
+
+## Datos
+
+```{r}
+ggpairs(aptitud)
+```
+
+## Datos
+
+Considerando el conjunto de `datos`, se requiere especificar dos conjuntos de variables. En este ejemplo, dividiremos en dos bloques:
+
+b. `habilidades`
+
+```{r}
+habilidades <- datos[,c("lectura","escritura","matematicas","ciencia")]
+summary(habilidades)
+```
+
+## Datos
+
+```{r}
+ggpairs(habilidades)
+```
+
+## Datos
+
+```{r}
+mat.corr <- matcor(aptitud, habilidades)
+```
+
+1. **Aptitud**
+
+```{r echo=FALSE}
+mat.corr$Xcor
+```
+
+2. **Habilidades**
+
+```{r echo=FALSE}
+mat.corr$Ycor
+```
+
+
+## Datos
+
+*  **Aptitud** +  **Habilidades**
+
+```{r echo=FALSE}
+mat.corr$XYcor
+```
+
+## `CCA` analisis
+
+```{r}
+datos.cc <- cc(aptitud, habilidades)
+```
+
+_Nota: Revisen la documentacion de la funcion `cc` y la libreria `CCA` en general._
+
+```{r}
+summary(datos.cc)
+```
+
+**Correlacion canonica**
+
+Hasta `3` coeficientes de correlacion canonica... _Recuerdan?_
+
+```{r}
+datos.cc$cor
+```
+
+## `CCA` analisis
+
+**Coeficientes `CCA`**
+
+* **aptitud**
+
+```{r echo=FALSE}
+datos.cc$xcoef
+```
+
+* **habilidades**
+
+```{r echo=FALSE}
+datos.cc$ycoef
+```
+
+_Como interpretamos estas cifras???_
+
+## `CCA` analisis
+
+**Loadings `CCA`**
+
+```{r}
+datos.cc.coef <- comput(aptitud, habilidades, datos.cc)
+summary(datos.cc.coef)
+```
+
+Los datos en este apartado corresponden a las *correlaciones* entre las *variables originales* y las *variables canonicas*.
+
+## `CCA` analisis
+
+**Loadings `CCA`**
+
+* **aptitud**
+```{r echo=FALSE}
+datos.cc.coef$corr.X.xscores
+```
+
+```{r echo=FALSE}
+datos.cc.coef$corr.Y.xscores
+```
+
+## `CCA` analisis
+
+**Loadings `CCA`**
+
+* **aptitud**
+```{r echo=FALSE}
+datos.cc.coef$corr.X.yscores
+```
+
+```{r echo=FALSE}
+datos.cc.coef$corr.Y.yscores
+```
+
+## `CCA` analisis
+
+**Significacia del `CCA`**
+
+*Las dimensiones canonicas ( o variables canonicas), son variables latentes que son analogas a los factores obtenidos en el `AF`.*
+
+**P:** Cuales de esas variables canonicas son estadisticamente significativas???
+
+```{r echo=FALSE}
+ev <- (1 - datos.cc$cor^2)
+n <- dim(aptitud)[1]
+p <- length(habilidades)
+q <- length(aptitud)
+k <- min(p, q)
+m <- n - 3/2 - (p + q)/2
+w <- rev(cumprod(rev(ev)))
+d1 <- d2 <- f <- vector("numeric", k)
+for (i in 1:k) {
+    s <- sqrt((p^2 * q^2 - 4)/(p^2 + q^2 - 5))
+    si <- 1/s
+    d1[i] <- p * q
+    d2[i] <- m * s - p * q/2 + 1
+    r <- (1 - w[i]^si)/w[i]^si
+    f[i] <- r * d2[i]/d1[i]
+    p <- p - 1
+    q <- q - 1
+}
+```
+
+```{r}
+pv <- pf(f, d1, d2, lower.tail = FALSE)
+dmat <- cbind(WilksL = w, F = f, df1 = d1, df2 = d2, p = pv)
+dmat
+```
+
+## `CCA` analisis
+
+**Significacia del `CCA`**
+
+* Ajustes por variaciones en escala en los datos originales.
+
+**Aptitud** La matriz diagonal de coeficientes canónicos estandarizados de `aptitud` dada por sd.
+
+```{r}
+s1 <- diag(sqrt(diag(cov(aptitud))))
+s1 %*% datos.cc$xcoef
+```
+
+## `CCA` analisis
+
+**Significacia del `CCA`**
+
+**Habilidades** La matriz diagonal estandarizada de los coeficientes `habiliades` academicas con base en sd.
+
+```{r}
+s2 <- diag(sqrt(diag(cov(habilidades))))
+s2 %*% datos.cc$ycoef
+```
+
+## `CCA` temas avanzados
+
+* Implicaciones de emplear variables `estandarizadas` o `no estandarizadas`  
+
+* Implicaciones de realizar `CCA` con variables discretas o categoricas
+
+* Incorporacion de la **incertidumbre epistemica** asociada con el aprendizaje de $\Sigma_x$, $\Sigma_y$ y $\Sigma_{xy}$ **especialmente**, como en el caso de `PCA`
+
+* Anticipar/predecir la **correlacion canonica** entre un conjunto de variables futuras $x^{f}$ y $y^{f}$, con base en el aprendizaje realizado
+
+* *Escalabilidad* de la solucion
+
+* `CCA` para mas de dos conjuntos de variables simultaneamente
+
+* `CCA` no lineal o no parametrico

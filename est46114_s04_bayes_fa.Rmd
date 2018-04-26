@@ -1,0 +1,82 @@
+---
+title: Analisis de Factores (Enfoque Bayesiano)
+subtitle: Semana 04
+author: Juan Carlos Martinez-Ovando
+institute: Division de Actuaria, Estadistica y Matematicas
+titlegraphic: /svm-sources/ITAM_2016.png
+fontsize: 10pt
+output:
+ ioslides_presentation:
+    smaller: true
+    logo: ~/svm-sources/ITAM_2016.png
+    css: ~/svm-sources/svm-ioslides-css.css    
+ beamer_presentation:
+    template: ~/svm-sources/svm-latex-beamer.tex
+    keep_tex: true
+#toc: true
+    slide_level: 2
+---
+
+## Paquetes
+
+### *Loading*
+
+Cargamos los paquetes que usaremos en estas ilustraciones.
+
+
+```
+# Devtools
+if (require("devtools") == FALSE){
+  install.packages("devtools")
+}
+library("devtools")
+# MCMCpack
+if (require("MCMCpack") == FALSE){
+  install_github("cran/MCMCpack")
+}
+library("MCMCpack")
+
+# Data
+data <- read.csv("C:/Users/Juan Carlos/Documents/MEGA/Mega.ITAM/Material.Cursos/EST46114/Data&Code/BostonHousing/BostonHousing.csv", 
+                 header = TRUE, sep=",")
+```
+
+```{r include=FALSE}
+# Devtools
+if (require("devtools") == FALSE){
+  install.packages("devtools")
+}
+library("devtools")
+# MCMCpack
+if (require("MCMCpack") == FALSE){
+  install_github("cran/MCMCpack")
+}
+library("MCMCpack")
+
+# Data
+data <- read.csv("C:/Users/Juan Carlos/Documents/MEGA/Mega.ITAM/Material.Cursos/EST46114/Data&Code/BostonHousing/BostonHousing.csv", 
+                 header = TRUE, sep=",")
+```
+
+
+# Parte 1 - Especificacion y aprendizaje bayesiano
+
+## Especificacion
+
+**Modelo**
+
+# Parte 2 - Implementacion
+
+```{r}
+head(data)
+dim(data)
+
+posterior <- MCMCmixfactanal(~crim+indus+nox+age+dis,
+                        factors=1, data=data[50,],
+                        lambda.constraints = list(courts=list(2,"-")),
+                        burnin=500, mcmc=1000, thin=50,
+                        verbose=500, L0=.25, store.lambda=TRUE,
+                        store.scores=TRUE, tune=1.2)
+plot(posterior)
+summary(posterior)
+```

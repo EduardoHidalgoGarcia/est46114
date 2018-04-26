@@ -1,0 +1,213 @@
+---
+title: "S07 - Modelos Log-lineales"
+author: "Juan Carlos Martinez-Ovando"
+date: "Primavera 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+**Objetivo**
+
+En esta sesion aprenderemos los fundamentos matematicos de los modelos log-lineales para analizar datos categoriucos multivariados agrupados como tablas de contingencia.
+
+* Revisamos la implementacion practica de estos modelos empleando el paradigma frecuentista.
+
+* En la siguiente sesion revisaremos su contraparte bayesiana.
+
+Estudiamos estos modelos como preludio de los modelos multidireccionales (a.k.a. *multi-way models*) y de los modelos de grafos probabilisticos.
+
+---
+
+# Parte 1 - Fundamentos
+
+## Un poco de teoria
+
+* Suponemos que tenemos $N$ variables categoricas multidimensionales, indizados por $n=1,2,\ldots,N$. 
+
+* Cada una de las $N$ variables corresponde a mediciones $d$-dimensionales de datos discretos categoricos.
+
+* Denotamos la coleccion de las variables discretas categoricas como $$X=(X_{v}),$$ y referimos a los valores categoricos como niveles.
+
+* Asi, una observacion generica se referira a $$i_j=(i_{j,1},i_{j,2},\ldots,i_{j,d}),$$
+donde cada $i_{j,k} \in \{1,2,\ldots,I_k\},$ siendo $I_k$ el numero de categorias de las $k$-esima dimension.
+
+* El conjunto donde todas las $i_j$ toman valores (i.e. producto cartesiano de los $k$ conjuntos $\{1,2,\ldots,I_k\}$) se denota por $\mathcal{I}$.
+
+### Supuestos
+
+En el enfoque frecuentista, es comun suponer que las observaciones son mutuaente independientes estocasticamente. Asi, la distriucion conjunta de las $N$ observaciones queda expresada como $$p(X_1=i_1,\ldots,X_N=i_N)=\prod_{j=1}^{N}p(X_j=i_j)=\prod_{i\in \mathcal{I}}P(i)^{n(i)},$$
+donde $$P(i)=p(X=i),$$ para todo $i\in \mathcal{I}$ y $$n(i)=\#\{X_n:X_n=i,n=1,\ldots,N\}.$$
+
+### Tabla de contingencia
+
+Resumiendo la informacion de las $N$ observaciones en una tabla de contingencia, por el supuesto de independencia estocastica entre observaciones, se obtiene que la distribucion conjunta de la misma tabla es
+$$P\left(\{n(i)\}_{i\in\mathcal{I}}\right)\propto \prod_{i\in \mathcal{I}}P(i)^{n(i)},$$
+siendo la contante de propocionalidad igual al componente combinatorio $\frac{N!}{\prod_{i\in\mathcal{I}}n(i)!}.$
+
+Las dos expresiones anteriores, $P\left(\{n(i)\}_{i\in\mathcal{I}}\right)$ y $p(X_1=i_1,\ldots,X_N=i_N)$, representan la **verosimilitud** de los datos/informacion para el conjunto de **parametros** $$\theta=\{p(i)\}_{i\in\mathcal{I}}.$$
+
+### Modelo saturado
+
+Asi, el modelo descrito antes, haciendo el supuesto generico sobre $\theta$ donde $$p(i)\geq 0$$ para todo $i\in\mathcal{I}$ y $$\sum_{i\in\mathcal{I}}p(i)=1,$$ se conoce como **modelo saturado.**
+
+* El modelo saturado es generico, pero en ocasiones poco informativo. En alguna ocasiones se requiere *imponer restricciones* adicionales sobre los $p(i)$s. Eso lo veremos en la siguiente sesion.
+
+### Inferencia
+
+Considerando el **modelo saturado** se obtiene directamente que el estimador maximo versosimil para $\theta$ esta dado por $$\widehat{\theta}=\{\widehat{p(i)}\}_{i\in\mathcal{I}},$$ donde $$\widehat{p(i)}=\frac{n(i)}{N}.$$
+
+* Observen que en este caso, no se incorpora la incertidumbre epistemica sobre $\hat{\theta}.$
+
+Retomando la informacion respecto a la **tabla de contingencia** $\{m_{i}\}_{i\in\mathcal{I}}$ se tiene que $$\mathbb{E}(m_{i})=N\widehat{p(i)},$$ para $i\in\mathcal{I}.$
+
+## Modelo jerarquico log-lineal
+
+Los **modelos jerarquicos log-lineales** expresan los componentes de $\theta$ como productos de _factores marginales_ y _factores combinados_ (o _factores de interaccion_) de las diferentes dimensiones que componen la **tabla de contigencia** $\{m_i\}_{i\in\mathcal{I}}.$
+
+Ilustrando esta idea con una tabla de contingencia de tres dimensiones $\{m_i\}_{i\in\mathcal{I}}$ en la que $$i=(j,k,l),$$ para $j=1,\ldots,J$, $k=1,\ldots,K$ y $l=1,\ldots,L$. Asi, $$\mathcal{I}=\{(j,k,l)\}_{j,k,l}.$$
+
+### Modelo saturado
+
+En el caso del **modelo saturado** para la tabla de contingencia de tres dimnesiones, tenemos que los parametros $\theta=\{p(i)\}_{i\in\mathcal{I}}$ son reparametrizados como $$p(i)=u \cdot u_{j} \cdot u_{k} \cdot u_{l} \cdot u_{jk} \cdot u_{jl} \cdot u_{kl} \cdot u_{jkl}.$$
+
+* Podria dar la apariencia que la reparametrizacion anterior es "demasiado" saturada. Sin embargo, no es el caso, pues admite la posibilidad de que algunos de los componentes $p(i)$ puedan ser iguales a 0. 
+
+Los componentes $u_{s}$s representan los factores del modelo. Asi, el componente $u$ representa el _factor comun_, los $u_{w}$s representan los _factores principales_, los componentes $u_{wv}$s representan los _factores de interaccion de segundo orden_ y el componente $u_{jkl}$ represental el _factor de interaccion de tercer orden_.
+
+### Modelo de efectos principales
+
+El **modelo de efector principales** es expresado como $$p(i)=u \cdot u_{j} \cdot u_{k} \cdot u_{l},$$ para $i\in\mathcal{I}.$ Comunmente, este modelo es expresado en su version aditiva,
+$$log(p(i))=\tilde{u}+\tilde{u}_{j}+\tilde{u}_{k}+\tilde{u}_{l}.$$
+
+## Ajuste del modelo
+
+Retomemos el modelo general para la **tabla de contingencia** $\{m_{i}\}_{i\in\mathcal{I}}$. La version logaritmica de la verosimilitud maximizada para un conjunto de datos $\{n(i)\}_{iin\mathcal{I}}$ esta expresada como $$l=\sum_{i\in\mathcal{I}}n(i) log\left(\widehat{p(i)}\right).$$
+
+La evaluacion de que tan adecuado es el modelo para un conjunto de datos $\{n(i)\}_{i\in\mathcal{I}}$ puede realizarse en terminos de la **devianza** del modelo.
+
+### Devianza
+
+La devianza del modelo para tablas de contingencia se define como dos veces la verosimilitud del **modelo** contrastado con el **modelo saturado**. Denotemos por $l_s$ a la log-verosimilitud del modelo saturado y por $l$ la verosimilitud del modelo que consideremos en cuestion, la devianza se define entonces como \begin{eqnarray}D & = & 2\left(\hat{l}_s-\hat{l}\right)\\ & = & 2\sum_{i\in\mathcal{I}} n(i)log\left(\frac{n(i)}{\widehat{m(i)}}\right).\end{eqnarray}
+
+* El calculo anterior requiere la posibilidad de ajustar/estimar el **modelo saturado**. En el caso de los modelos log-lineales este es el caso. **Revisen por favor por que pasa esto.**
+
+* La distribucion asintotica de $D$ es $\Xi^{2}(k)$ donde $k=p_s-p$ siendo $p_s$ el _numero de parametros del modelo saturado_ y $p$ el _numero de parametros del modelo en cuestion_.
+
+* La devianza $D$ nos brinda una medida para evaluar el ajuste del modelo (considerando el **modelo saturado** como la alternativa de referencia).
+
+---
+
+# Parte 2 - Practica
+
+Ilustraremos el materia anterior en R version 3.4.3 empleando los paquetes `gRbase` y `gRim`.
+ 
+```{r eval=TRUE, include=FALSE}
+if(!require('devtools')){install.packages("devtools")}
+library("devtools")
+```
+
+```{r}
+if(!require('graph')){
+  source("https://bioconductor.org/biocLite.R")
+  suppressMessages(biocLite("graph"))}
+suppressMessages(library("graph"))
+
+if(!require('Rgraphviz')){
+  source("https://bioconductor.org/biocLite.R")
+  suppressMessages(biocLite("Rgraphviz"))}
+suppressMessages(library("Rgraphviz"))
+
+if(!require('RBGL')){
+  source("https://bioconductor.org/biocLite.R")
+  suppressMessages(biocLite("RBGL"))}
+suppressMessages(library("RBGL"))
+
+if(!require('gRbase')){
+  suppressMessages(install.packages("gRbase"))}
+suppressMessages(library("gRbase"))
+
+if(!require('gRim')){
+  suppressMessages(install.packages("gRim"))}
+suppressMessages(library("gRim"))
+```
+
+En particular, estudiaremos los datos de un estudio de enfermedades coronarias de corazon. El numero de obseraciones es igual a $1,841$ individuos, para los que se registraron $6$ diferentes mediciones:
+
+a. fumador (o no) - `smoke`
+
+b. cansancio mental (o no) - `mental`
+
+c. cansancio fisico (o no) - `phys`
+
+d. presion arterial sistolica inferior a 140 mm (o no) - `systol`
+
+e. relacion de las lipoproteinas beta a alfa inferior a 3 unidades (o no) - `protein`
+
+f. antecedentes familiares de enfermedad coronaria (o no) - `family`.
+
+Los datos estan etiquetados como `y` si se cumple la condicion y como `n` en caso contrario.
+
+Asi, el problema esta conformado como una tabla de contingencia $6$-dimensional (tabla binaria, o tambien referida como una tabla de contingencia multi-imensional $2^{6}$).
+
+```{r}
+data(reinis)
+class(reinis)
+summary(reinis)
+plot(reinis)
+str(reinis)
+```
+
+El modelo con **factores independientes** o **efectos principales** (y cualquier modelo en general) se define como un objeto empleando la funcion `dmod()`, como se ilustra a continuacion.
+
+```{r}
+modelo.ind <- dmod(~smoke+mental+phys+systol+protein+family, data=reinis)
+modelo.ind
+plot(modelo.ind)
+```
+
+Definimos el **modelo saturado** ahora como  modelo como:
+
+```{r}
+modelo.sat <- dmod(~.^., data=reinis)
+modelo.sat
+plot(modelo.sat)
+```
+
+El modelo con **interacciones de orden $p$** es definido con `dmod()` de manera simplificada. El de orden $2$  se define como
+```{r}
+modelo.dos <- dmod(~.^2, data=reinis)
+modelo.dos
+```
+
+Y el modelo con **interacciones de orden $3$** se define como,
+```{r}
+modelo.tres <- dmod(~.^3, data=reinis)
+modelo.tres
+```
+
+La relevancia de las variantes de los modelos con interacciones se contrasta y determina empleando medidas para la comparacon y seleccion de modelos, como la `devianza`. Empleando tal medida, el **criterio de eleccion** consiste en privilegiar el modelo con la devianza mas pequena.
+
+Aunque en el caso de los datos de nefermedades coronarias de corazon no se manifiesta, es posible que los datos sean ralos (escazos) en algunas combinaciones de las tabals de contingencia. En ese caso, se ha recomendado en la literatura emplear una variacion de la `devianza`, conocida como `devianza de la independencia` o `ideviance`. Esta medida se define como dos vecesel cociente de la log-verosimilitud entre el *modelo de interes* y el *modelo con independencia absoluta*, i.e.
+$$
+iD = 2\sum_{i}n(i)log\left\{\frac{\widehat{m(i)}}{\prod_{v}n(i_v)}\right\}.
+$$
+
+**Nota I:** Los resultados mostrados hasta ahora suponen que el esquema de muestreo en la tabla de contingencia es *multinomial*. En la siguiente sesion revisaremos el caso donde el esquema de muestre supuesto es Poisson al interior de cada celda.
+
+**Nota II:** En el caso de los modelos basados en el *muestreo multinomial*, no es de interes estimar los parametros (probabilidades) de pertenencia a cada celda de la tabla de contingencia, sino estudiar las posibles interacciones entre las dimensiones que definen las tablas de contingencia mismas. Tales interacciones se contrastan a partir de definir vaiantes del modelo logistico. Asi, el *interes ultimo* es el de *contrastar diferentes interacciones* (i.e. contrastar diferentes modelos y elegir el mas adecuado).
+
+
+---
+
+
+# Siguientes temas:
+
+* Implementacion bayesiana de los modelos log-lineales (incorporando la incertidumbre epistemica).
+
+* Revision de la devianza bayesiana y contraste de modelos.
+
+* Vinculacion del modelo jerarquico log-lineal con los modelos de grafos probabilisticos.

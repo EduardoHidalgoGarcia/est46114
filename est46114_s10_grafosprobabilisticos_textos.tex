@@ -1,0 +1,758 @@
+\documentclass[11pt,]{article}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\newcommand*{\authorfont}{\fontfamily{phv}\selectfont}
+\usepackage[]{mathpazo}
+
+
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+
+
+
+\usepackage{abstract}
+\renewcommand{\abstractname}{}    % clear the title
+\renewcommand{\absnamepos}{empty} % originally center
+
+\renewenvironment{abstract}
+ {{%
+    \setlength{\leftmargin}{0mm}
+    \setlength{\rightmargin}{\leftmargin}%
+  }%
+  \relax}
+ {\endlist}
+
+\makeatletter
+\def\@maketitle{%
+  \newpage
+%  \null
+%  \vskip 2em%
+%  \begin{center}%
+  \let \footnote \thanks
+    {\fontsize{18}{20}\selectfont\raggedright  \setlength{\parindent}{0pt} \@title \par}%
+}
+%\fi
+\makeatother
+
+
+
+
+\setcounter{secnumdepth}{0}
+
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+
+
+\title{S10 - Grafos Probabilisticos y Analisis de Textos  }
+
+
+
+\author{\Large Juan Carlos Martinez-Ovando\vspace{0.05in} \newline\normalsize\emph{ITAM}  }
+
+
+\date{}
+
+\usepackage{titlesec}
+
+\titleformat*{\section}{\normalsize\bfseries}
+\titleformat*{\subsection}{\normalsize\itshape}
+\titleformat*{\subsubsection}{\normalsize\itshape}
+\titleformat*{\paragraph}{\normalsize\itshape}
+\titleformat*{\subparagraph}{\normalsize\itshape}
+
+
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+\usepackage[strings]{underscore} % protect underscores in most circumstances
+
+
+
+\newtheorem{hypothesis}{Hypothesis}
+\usepackage{setspace}
+
+\makeatletter
+\@ifpackageloaded{hyperref}{}{%
+\ifxetex
+  \PassOptionsToPackage{hyphens}{url}\usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \PassOptionsToPackage{hyphens}{url}\usepackage[unicode=true]{hyperref}
+\fi
+}
+
+\@ifpackageloaded{color}{
+    \PassOptionsToPackage{usenames,dvipsnames}{color}
+}{%
+    \usepackage[usenames,dvipsnames]{color}
+}
+\makeatother
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={Juan Carlos Martinez-Ovando (ITAM)},
+             pdfkeywords = {Graphical models, text analytics, contingency tables.},  
+            pdftitle={S10 - Grafos Probabilisticos y Analisis de Textos},
+            colorlinks=true,
+            citecolor=blue,
+            urlcolor=blue,
+            linkcolor=magenta,
+            pdfborder={0 0 0}}
+\urlstyle{same}  % don't use monospace font for urls
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+
+% add tightlist ----------
+\providecommand{\tightlist}{%
+\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\begin{document}
+	
+% \pagenumbering{arabic}% resets `page` counter to 1 
+%
+% \maketitle
+
+{% \usefont{T1}{pnc}{m}{n}
+\setlength{\parindent}{0pt}
+\thispagestyle{plain}
+{\fontsize{18}{20}\selectfont\raggedright 
+\maketitle  % title \par  
+
+}
+
+{
+   \vskip 13.5pt\relax \normalsize\fontsize{11}{12} 
+\textbf{\authorfont Juan Carlos Martinez-Ovando} \hskip 15pt \emph{\small ITAM}   
+
+}
+
+}
+
+
+
+
+
+
+
+
+\begin{abstract}
+
+    \hbox{\vrule height .2pt width 39.14pc}
+
+    \vskip 8.5pt % \small 
+
+\noindent Revisaremos estructuras probabilisticas que pueden definirse al rededor
+de objetos \texttt{grafos}. Revisaremos aspectos inferenciales
+relacionados con el aprendizaje estadistico en estructuras de
+\texttt{grafos\ probabilisticos}. Estudiaremos el modelo grafico
+probabilistico \emph{naive Bayes} para clasificacion supervisada.
+Revisamos los fundamentos del analisis de textos usando las librerias
+\texttt{tm} y \texttt{SnowballC}.
+
+
+\vskip 8.5pt \noindent \emph{Keywords}: Graphical models, text analytics, contingency tables. \par
+
+    \hbox{\vrule height .2pt width 39.14pc}
+
+
+
+\end{abstract}
+
+
+\vskip 6.5pt
+
+
+\noindent  \subsubsection{Paquetes de R}\label{paquetes-de-r}
+
+Aplicaremos el modelo \textbf{naive Bayes} en el contexto de analisis y
+clasificacion de textos usando la libreria \texttt{e1071}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{if}\NormalTok{(}\OperatorTok{!}\KeywordTok{require}\NormalTok{(}\StringTok{'tm'}\NormalTok{))\{}\KeywordTok{install.packages}\NormalTok{(}\StringTok{"tm"}\NormalTok{)\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: tm
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: NLP
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{if}\NormalTok{(}\OperatorTok{!}\KeywordTok{require}\NormalTok{(}\StringTok{'tm'}\NormalTok{))\{}\KeywordTok{install.packages}\NormalTok{(}\StringTok{"SnowballC"}\NormalTok{)\}}
+\ControlFlowTok{if}\NormalTok{(}\OperatorTok{!}\KeywordTok{require}\NormalTok{(}\StringTok{'tm'}\NormalTok{))\{}\KeywordTok{install.packages}\NormalTok{(}\StringTok{"e1071"}\NormalTok{)\}}
+\end{Highlighting}
+\end{Shaded}
+
+Nota: Este \texttt{markdown} ha sido producido con \texttt{R-3.3.3}.
+
+\section{Grafos probabilisticos}\label{grafos-probabilisticos}
+
+Hemos visto que los \texttt{grafos} son herramientas intuitivas para la
+visualizacion de relaciones entre variables (ya sea a nivel
+\texttt{objeto} o entre \texttt{objetos}). En los \texttt{grafos} hemos
+identificado:
+
+\begin{itemize}
+\item
+  Cada \texttt{nodo} representa una variable (i.e.~medicion particular
+  de un objeto o el objeto mismo)
+\item
+  La relacion entre \texttt{nodos} esta representada por \texttt{ligas}
+  de conexion
+\item
+  Las \texttt{ligas} de conexion pueden indicar
+  \texttt{relaciones\ simetricas} o \texttt{relaciones\ asimetricas},
+  dependiendo de la direccion de las \texttt{ligas}
+\end{itemize}
+
+Un \texttt{grafo\ probabilistico} emplea las relaciones de un
+\texttt{grafo} normal e introduce en las \texttt{ligas\ de\ conexion}
+una \textbf{medida de probabilidad} para cuantificar el grado de
+conectividad entre valores especificos de los nodos
+
+Asi, las \textbf{relaciones probabilisticas} entre los valores
+especificos de dos \texttt{nodos} \(\{i,j\}\), donde los valores
+especificos son \(X_i\) y \(X_j\) se definen como:
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\item
+  \(\mathbb{P}(X_i,X_j)=\mathbb{P}(X_i|X_j)\mathbb{P}(X_j)=\mathbb{P}(X_j|X_i)\mathbb{P}(X_i)=\)
+  si la relacion es \textbf{simetrica}
+\item
+  \(\mathbb{P}(X_i,X_j)=\mathbb{P}(X_i|X_j)\mathbb{P}(X_j)\) si la
+  relacion es \textbf{asimetrica} \[X_j \rightarrow X_i\]
+\item
+  \(\mathbb{P}(X_i,X_j)=\mathbb{P}(X_j|X_i)\mathbb{P}(X_i)\) si la
+  relacion es \textbf{asimetrica} \[X_i \rightarrow X_j\]
+\end{enumerate}
+
+Una vez definidas estas relaciones probabilisticas, usualmente imponemos
+una estructura parametral de la siguiente forma:
+\[\mathbb{P}(X_i,X_j)=F(X_i,X_j|\theta_{ij},\gamma),\] donde
+
+\begin{itemize}
+\item
+  \(\theta_{ij}\) es un parametro \texttt{local} para los nodos
+  conectados \texttt{(i,j)}
+\item
+  \(\gamma\) es un parametro general para todos los \texttt{nodos}
+\item
+  \(F\) es una funcion de probabilidad
+\end{itemize}
+
+La direccionalidad de la relacion esta asociada con la forma funcional
+de \texttt{F}, que es una \textbf{funcion de distribuciones de
+probabilidades}.
+
+\subsection{Independencia condicional}\label{independencia-condicional}
+
+Cuando un grafo cuenta con un conjunto de nodos, \(\{1,\ldots,n\}\) para
+los cuales se tienen asociados valores especificos,
+\(\{X_1,\ldots,X_n\}\), podemos pensar en estructuras de
+\textbf{dependencia estocastica} entre conjuntos de \texttt{variables} o
+\texttt{nodos}, i.e.~para todo \(i=1,\ldots,n\) tenemos que
+\[\mathbb{P}(X_i|X_{-i})=F(X_i|X_{\delta(i)},\theta_i,\gamma),\] donde
+
+\begin{itemize}
+\item
+  \(X_{-i}\) denota el conjunto de variables en el grafo con excepcion
+  de la \(i\)-esima variable
+\item
+  \(X_{\delta(i)}\) denota un conjunto de variables asociado con el
+  conjunto de \texttt{nodos} conectados con el \(i\)-esimo (i.e.~los
+  \texttt{vecinos} de la \(i\)-esima coordenada o \texttt{nodo} del
+  grafo)
+\item
+  \(\theta_i\) es el parametro local
+\item
+  \(\gamma\) parametro global
+\end{itemize}
+
+Al rededor de la estructura anterior podemos pensar en la nocion de
+\textbf{independencia estocastica} entre dos \texttt{nodos} \(\{i,j\}\)
+para sus variables \(X_i\) y \(X_j\), condicional en la informacionm
+compartida para ambas, dada por sus vecindades \(X_{\delta(i,j)}\)
+\textbf{si y solo si} \[F(X_i,X_j|X_{\delta(i,j)},\theta_{i,j},\gamma)
+ =
+ F(X_i|X_{\delta(i,j)},\theta_{i,j},\gamma)
+ \times
+ F(X_j|X_{\delta(i,j)},\theta_{i,j},\gamma).\]
+
+La \textbf{independencia estocastica marginal} entre \(X_i\) y \(X_j\)
+se obtiene cuando la anterior relacion se cumple con
+\(X_{\delta(i,j)}=\emptyset\).
+
+\subsubsection{Tipos de grafos
+probabilisticos}\label{tipos-de-grafos-probabilisticos}
+
+\paragraph{A. Grafos no dirigidos}\label{a.-grafos-no-dirigidos}
+
+\paragraph{B. Grafos dirigidos}\label{b.-grafos-dirigidos}
+
+\paragraph{C. Grafos de factores}\label{c.-grafos-de-factores}
+
+\subsubsection{Referencias}\label{referencias}
+
+\begin{itemize}
+\item
+  \textbf{Bishop} - Pattern Recognition and Machine Learning (capitulo
+  3)
+\item
+  \textbf{Jordan \& Weiss} - Probabilistic Inference in Graphical Models
+\item
+  \textbf{Heckerman} - Graphical Models: Structure Learning
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Naive Bayes}\label{naive-bayes}
+
+El modelo \textbf{naive Bayes} se emplea para relaizar tareas de
+clasificacion supervizada. Recordemos que un \texttt{clasificador} es
+una funcion \[f:(x_1,\ldots,x_p) \rightarrow y,\] donde
+
+\begin{itemize}
+\item
+  \(x_1,\ldots,x_p\) son \texttt{atributos}
+\item
+  \(y\) es una \texttt{etiqueta} (tipicamente binaria)
+\end{itemize}
+
+De acuerdo a lo que vimos antes, si \(\mathbb{P}\) es una regla de
+probabilidad asociada con el clasificador \(f\) tenemos que el
+clasificador bayesiano optimo es aquel
+\[\hat{y}=\arg\max_{y}\widehat{\mathbb{P}}\left(y|x_1,\ldots,x_p\right),\]
+
+donde \(\widehat{\mathbb{P}}\) es una estimacion de \(\mathbb{P}\), pues
+la ultima es desconocida.
+
+La especificacion de \(\mathbb{P}\left(y|x_1,\ldots,x_p\right)\) puede
+obtenerse via el Teorema de Bayes, reconociendo que los atributos son
+aleatorios, i.e. \[
+\mathbb{P}\left(y|x_1,\ldots,x_p\right)
+= \frac{ \mathbb{P}\left(x_1,\ldots,x_p\right|y) \mathbb{P}(y) }{ \mathbb{P}\left(x_1,\ldots,x_p\right) }.
+\]
+
+Cuando los atributos son continuos se require de un gran ejercicio de
+abstraccion para simplificar lo que se conoce como la
+\texttt{verosimilitud} del modelo, i.e.
+\(\mathbb{P}\left(x_1,\ldots,x_p\right|y)\). \emph{El uso de modelos
+graficos probabilisticos nos permite hacer esto, hasta ciertos limites.}
+
+Pensemos que los \(p\)-\texttt{atributos} son binarios y que las
+\texttt{etiquetas} contienen \(K\) categorias. En este caso, el numero
+efectivo de parametros necesarios para especificar el clasificador
+probabilistico seria igual a \(K(2^p-1)\), el cual puede ser
+siginificativamente grande e intratable en varios contextos (esto se
+conoce como \texttt{curse\ of\ dimensionality}).
+
+\subsection{Grafos probabilisticos}\label{grafos-probabilisticos-1}
+
+Empleando los grafos probabilisticos, podemos invocar (imponer, en
+realidad) ciertas estructuras de independencia condicional. En
+particular, el \textbf{supuesto fundamental} del modelo \textbf{naive
+Bayes} cuando \(y\) son etiquetas observables y \(x_1,\ldots,x_p\) son
+\(p\)-atributos binarios es que los atributos \(x_j\)s son
+condicionalmente independientes dada la etiqueta \(y\).
+
+Bajo el supuesto anterior, el numero efectivo de parametros del modelo
+se reduce de \(K(2^p-1)\) a \(pK\), dentro del contexto mencionado.
+
+Asi, el clasificador bayesiano \textbf{naive} queda definido como \[
+\widehat{y_{NB}}=\arg\max_{y}\widehat{\mathbb{P}}\left(y\right)\prod_{j=1}^{p}\widehat{\mathbb{P}}(x_j|y).\]
+
+En este caso:
+
+\begin{itemize}
+\item
+  El componente \(\mathbb{P}\left(y\right)\) se conoce como la
+  \texttt{prior} para la clasificacion
+\item
+  Los atributos \(x_j\) son condicionalmente independientes dado \(y\),
+  con \emph{verosimilitud} dada por \(\mathbb{P}(x_j|y)\).
+\end{itemize}
+
+\subsection{Aprendizaje estadistico}\label{aprendizaje-estadistico}
+
+El aprendizaje estadistico en la clase de modelos \textbf{naive Bayes}
+se realiza mediante un procedimiento de actualizacion de distribuciones
+multinomiales con conteos de frecuencias por clases, i.e.
+
+\begin{eqnarray}
+  \widehat{\mathbb{P}}(y=k) & = & \frac{ \#\{y_i:y_i=k\} }{ n },
+  \nonumber \\
+  \widehat{\mathbb{P}}(x_j=l|y=k) & = & \frac{ \#\{(y_i,x_{ij}):y_i=k,x_{ij}=l\} }{ \#\{y_i:y_i=k\} },
+\end{eqnarray}
+
+donde \(n\) es el tamano de la muestra.
+
+El clasificador \textbf{naive Bayes} se emplea con mucho exito en
+problemas de \textbf{analisis de textos} porque:
+
+\begin{itemize}
+\item
+  En esos casos los atributos \(x_j\) representan la aparicion (mas no
+  la frecuencia ni el orden) de ciertos \texttt{terminos}.
+\item
+  El numero de \texttt{terminos} o \(p\) es significativamente grande,
+  por lo que la simplificacion del supuesto fundamental del
+  \textbf{naive Bayes} resulta muy practica.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Datos de textos}\label{datos-de-textos}
+
+Cargamos los datos \texttt{aclImdb} correspondiente a la base de datos
+\emph{Large Movie Review Dataset} de IMDB, con 25 mil resenas en la
+\texttt{muestra\ de\ entrenamiento} y 25 mil registros en la
+\texttt{muestra\ de\ prueba}. Los datos los pueden descargar de la
+siguiente
+\href{http://ai.stanford.edu/~amaas/data/sentiment/index.html}{Liga}.
+
+Los registros corresponden a textos cortos con resenas sobre peliculas
+de \href{http://www.imdb.com}{IMDB}. Los datos comprenden tanto las
+resenas como los puntajes de los criticos.
+
+\textbf{\emph{Definicion}:} En linguistica, el \textbf{Corpus} se define
+como una coleccion de documentos (una especie de \texttt{data.frame}
+como ya conocemos, pero donde los registros son documentos). La libreria
+\texttt{tm} permite definir esta clase de objetos en \texttt{R},
+reconociendo que los documentos son cadenas (\texttt{string}s) de
+caracteres.
+
+Cargamos y definimos el \texttt{corpus} con las siguientes intrucciones:
+
+\begin{verbatim}
+rm(list=ls())
+
+# librerias
+require("tm")
+require("SnowballC")
+
+load("C:/Users/jcmo/Google Drive/Material.Cursos/EST25134/Sessions/IMDBReviews_Data.Rdata")
+
+# creacion del `corpus`
+nb_pos <- VCorpus(DirSource("/home/jcmo/Naive.Bayes/aclImdb/train/pos"), 
+                 readerControl = list(language="en"))
+
+nb_neg <- VCorpus(DirSource("/home/jcmo/Naive.Bayes/aclImdb/train/neg"), 
+                 readerControl = list(language="en"))
+
+class(nb_pos); class(nb_neg)
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  La creacion del \texttt{corpus} requiere de la identificacion del
+  idioma de los textos.La libreria \texttt{SnowballC} nos permite
+  indicar esto. (En el ejemplo, seleccionamos la opcion \texttt{en},
+  revisen la documentacion de la libreria para revisar los otros idiomas
+  disponibles, incluyendo al espanol).
+\end{itemize}
+
+\subsection{\texorpdfstring{Operaciones sobre
+\texttt{corpus}}{Operaciones sobre corpus}}\label{operaciones-sobre-corpus}
+
+La fusion de dos \texttt{corpus} en un solo objeto puede obtenerse
+empleando la instruccion \texttt{c()} --como en arreglos de datos en
+\texttt{R}--, solo que en este caso la opcion \texttt{recursve=T} es
+necesaria para mantener la estructura de \texttt{corpus}.
+
+\begin{verbatim}
+nb_all <- c(nb_pos, nb_neg, recursive=T)
+class(nb_all)
+\end{verbatim}
+
+Las entradas del objeto \texttt{corpus} pueden accederse como si fueran
+objetos del tipo \texttt{list}, pero con metadatos particulares, e.g.:
+
+\begin{verbatim}
+nb_all[[1]]
+class(nb_all[[1]])
+meta(nb_all[[1]])
+\end{verbatim}
+
+Creamos ahora un vector con los nombres de los archivos:
+
+\begin{verbatim}
+ids <- sapply(1:length(nb_all), function(x) meta(nb_all[[x]], "id"))
+head(ids)
+\end{verbatim}
+
+Cada archivo es de la forma
+\texttt{\textless{}counter\textgreater{}\_\textless{}score\textgreater{}.txt}
+y tienen asociado puntajes.
+
+\begin{itemize}
+\item
+  Puntajes en el rango de 7-10 son etiquetados como positivos
+  (\texttt{pos})
+\item
+  Puntajes en el rango de 0-4 son etiquetados como negativos
+  (\texttt{neg})
+\end{itemize}
+
+Extraemos los puntajes/calificaciones de los archivos empleando las
+siguientes funciones:
+
+\begin{verbatim}
+scores <- as.numeric(sapply(ids, 
+                            function(x) sub("[0-9]+_([0-9]+)\\.txt", "\\1", x)))
+scores <- factor(ifelse(scores>=7,"positive","negative"))
+summary(scores)
+\end{verbatim}
+
+Algunas instrucciones de preprocesamiento, empleando la funcion
+\texttt{tm\_map}, e.g.:
+
+\begin{itemize}
+\item
+  Eliminar numeros
+\item
+  Eliminar puntuacion
+\item
+  Convertir mayusculas en minusculas
+\item
+  Eliminar palabras
+\item
+  Eliminar espacios extras entre palabras
+\end{itemize}
+
+\begin{verbatim}
+nb_all <- tm_map(nb_all, content_transformer(removeNumbers))
+nb_all <- tm_map(nb_all, content_transformer(removePunctuation))
+nb_all <- tm_map(nb_all, content_transformer(tolower))
+nb_all <- tm_map(nb_all, content_transformer(removeWords), stopwords("english"))
+nb_all <- tm_map(nb_all, content_transformer(stripWhitespace))
+\end{verbatim}
+
+Creamos ahora la matriz de terminos de los documentos:
+
+\begin{verbatim}
+nb_dtm <- DocumentTermMatrix(nb_all)
+dim(nb_dtm)
+class(nb_dtm)
+nb_dtm[12,12]
+nb_dtm[1,1]
+nb_dtm
+\end{verbatim}
+
+Eliminamos terminos que son poco frecuentes (\texttt{sparse}):
+
+\begin{verbatim}
+nb_dtm <- removeSparseTerms(x=nb_dtm, sparse = 0.90)
+dim(nb_dtm)
+nb_dtm[12,12]
+nb_dtm[1,1]
+\end{verbatim}
+
+Exploramos la primera resena de peliculas, identificando los terminos
+que estan relacionados (i.e.~los que tienen frecuencia distinta de
+\texttt{0}):
+
+\begin{verbatim}
+inspect(nb_dtm[1,]) 
+terms <- which( inspect(nb_dtm[1,]) != 0 )
+inspect( nb_dtm[1,terms] )
+\end{verbatim}
+
+Convertimos ahora todos los elementos del objeto \texttt{nb\_dtm} en
+entradas binarias, pues el analisis de textos campleta si el termino
+especifico (e.g. \texttt{superv}) aparece en el texto, mas no toma en
+cuenta \emph{cuantas} veces aparece en el texto.
+
+\begin{verbatim}
+nb_dtm <- weightBin(nb_dtm)
+inspect( nb_dtm[1,terms] )
+\end{verbatim}
+
+Dividimos el \texttt{corpus} en datos \texttt{train} y \texttt{test} en
+formato \texttt{data.frame}. La segmentacion de \texttt{nb\_dtm} se
+realiza de manera aleatorizada:
+
+\begin{verbatim}
+nb_df <- as.data.frame(as.matrix(nb_dtm))
+set.seed(1)
+nb_sampling_vector <- sample(25000, 20000)
+nb_df_train <- nb_df[nb_sampling_vector,]
+nb_df_test <- nb_df[-nb_sampling_vector,]
+scores_train <- scores[nb_sampling_vector]
+scores_test <- scores[-nb_sampling_vector]
+
+save(nb_df_train, 
+     nb_df_test, 
+     scores_train, 
+     scores_test, 
+     file = "IMDBReviews_Data.Rdata")
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Ilustracion}\label{ilustracion}
+
+La implementacion del modelo \textbf{naive Bayes} la realizamos
+empleando la libreria \texttt{e1071} y los datos de entrenamiento
+\texttt{nb\_df\_train}:
+
+\begin{verbatim}
+library("e1071")
+
+load("C:/Users/jcmo/Google Drive/Material.Cursos/EST25134/Sessions/IMDBReviews_Data.Rdata")
+
+nb_model <- naiveBayes(nb_df_train, scores_train)
+
+summary(nb_model)
+\end{verbatim}
+
+Calculamos las predicciones \texttt{ajustadas} empleando el modelo
+estimado \texttt{nb\_model} sobre los datos de entrenamiento
+\texttt{nb\_df\_train}:
+
+\begin{verbatim}
+nb_train_predictions <- predict(nb_model, nb_df_train) 
+save(nb_df_train, 
+     nb_df_test, 
+     scores_train, 
+     scores_test, 
+     nb_train_predictions, 
+     file = "IMDBReviews_Data.Rdata")
+
+# errores ajustados de clasificacion
+mean(nb_train_predictions == scores_train)
+table(actual = scores_train, predictions = nb_train_predictions)
+\end{verbatim}
+
+Ahora, calculamos las predicciones \texttt{reales} empleando el modelo
+estimado \texttt{nb\_model} sobre los datos de prueba
+\texttt{nb\_df\_test}:
+
+\begin{verbatim}
+nb_test_predictions <- predict(nb_model, nb_df_test)
+
+# errores de prediccion
+mean(nb_test_predictions == scores_test)
+table(actual = scores_test, 
+      predictions = nb_test_predictions)
+\end{verbatim}
+
+Post-procesamiento de los datos (\texttt{stem}):
+
+\begin{verbatim}
+nb_all <- tm_map(nb_all, stemDocument, language = "english")
+nb_dtm <- DocumentTermMatrix(nb_all) 
+nb_dtm <- removeSparseTerms(x=nb_dtm, sparse = 0.99)
+nb_dtm <- weightBin(nb_dtm)
+nb_df <- as.data.frame(as.matrix(nb_dtm))
+nb_df_train <- nb_df[nb_sampling_vector,]
+nb_df_test <- nb_df[-nb_sampling_vector,]
+\end{verbatim}
+
+Contraste del modelo con los \texttt{corpus} post-procesados:
+
+\begin{verbatim}
+nb_model_stem <- naiveBayes(nb_df_train, scores_train)
+
+nb_test_predictions_stem <- predict(nb_model_stem, nb_df_test)
+
+mean(nb_test_predictions_stem == scores_test)
+table(actual = scores_test, 
+      predictions = nb_test_predictions_stem)
+\end{verbatim}
+
+Nota: Calcula de nuevo \texttt{nb\_dtm} sin haber realizado el
+post-procesamiento de los datos antes de continuar con las siguientes
+instrucciones.
+
+\begin{verbatim}
+nb_all <- c(nb_pos, nb_neg, recursive=T)
+nb_all <- tm_map(nb_all, content_transformer(removeNumbers))
+nb_all <- tm_map(nb_all, content_transformer(removePunctuation))
+nb_all <- tm_map(nb_all, content_transformer(tolower))
+nb_all <- tm_map(nb_all, content_transformer(removeWords),
+                 stopwords("english"))
+nb_all <- tm_map(nb_all, content_transformer(stripWhitespace))
+nb_dtm <- DocumentTermMatrix(nb_all) 
+nb_dtm <- removeSparseTerms(x=nb_dtm, sparse = 0.99)
+nb_df <- as.data.frame(as.matrix(nb_dtm))
+nb_df_train <- nb_df[nb_sampling_vector,]
+nb_df_test <- nb_df[-nb_sampling_vector,]
+\end{verbatim}
+
+\begin{verbatim}
+nb_model_laplace <- naiveBayes(nb_df_train, scores_train, laplace=10)
+
+nb_test_predictions_laplace <- predict(nb_model_laplace, nb_df_test)
+
+mean(nb_test_predictions_laplace == scores_test)
+table(actual = scores_test, 
+      predictions = nb_test_predictions_laplace)
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsubsection{Referencias adicionales}\label{referencias-adicionales}
+
+\begin{itemize}
+\item
+  \textbf{Maas} - \emph{Learning Word Vectors for Sentiment Analysis}
+\item
+  \textbf{Feinerer et al} - \emph{Text mining infrastructure in R}
+\end{itemize}
+
+
+
+
+\newpage
+\singlespacing 
+\end{document}

@@ -1,0 +1,229 @@
+---
+title: Regresion Multiple (Regresion con Penalizacion)
+subtitle: Semana 05
+author: Juan Carlos Martinez-Ovando
+institute: Division de Actuaria, Estadistica y Matematicas
+titlegraphic: /svm-sources/ITAM_2016.png
+fontsize: 10pt
+output:
+ ioslides_presentation:
+    smaller: true
+    logo: ~/svm-sources/ITAM_2016.png
+    css: ~/svm-sources/svm-ioslides-css.css    
+ beamer_presentation:
+    template: ~/svm-sources/svm-latex-beamer.tex
+    keep_tex: true
+#toc: true
+    slide_level: 2
+---
+
+# Parte 1 - Fundamentos
+
+## Caso univariado (regresion multiple)
+
+En este caso, la variable de respuesta es  escalar, i.e. $Y\in \Re$, y $X=(X_1,\ldots,X_p)$ con $p$ variables explicativas (covariables), de tal forma que 
+
+$$
+Y|X=x \sim N(y|x'\beta,\sigma)
+$$
+es la distribucion condicional donde 
+$$
+\mathbb{E}(Y|x)=x'\beta.
+$$
+**Varias observaciones**
+
+Cuando tenemos varias observaciones, $i=1,\ldots,n$, el modelo es expresado como
+$$
+Y_i|X_i=x_i \sim N(y|x_i'\beta,\sigma),
+$$
+o equivalentemente en su forma matricial como
+$$
+\boldsymbol{Y}|\boldsymbol{X}=\boldsymbol{x} \sim N_n\left(y|\boldsymbol{X}'\beta,\sigma\boldsymbol{I}\right).
+$$
+
+## Seleccion de variables
+
+**Inferencia**
+
+Cuando trabajamos con el modelo de regresion multiple, la _identificacion_ o _estimacion_ de $\beta$, obtenida mediante el paradigma frecuentista o bayesiano, se basa en encontrar el valor de $\beta$ que maximice (en cierta forma) la verosimilutid 
+$$
+lik\left(\beta,\sigma|\boldsymbol{y},\boldsymbol{X}\right) \propto \sigma^{-n/2}\exp\left\{-\frac{1}{2\sigma}\left(\boldsymbol{Y}-\boldsymbol{X}'\beta\right)'(\boldsymbol{Y}-\boldsymbol{X}'\beta\right)\right\},
+$$
+o, equivalentemente, mediante la minimizacion de una funcion de perdida asociada (errores cuadraticos, es el caso general), i.e.
+$$
+L\left(\beta,\sigma|\boldsymbol{y},\boldsymbol{X}\right) \propto \left(\boldsymbol{y}-\boldsymbol{X}'\beta\right)' (\boldsymbol{y}-\boldsymbol{X}'\beta\right),
+$$
+en cuyo caso tenemos varios resultados para $\beta$.
+
+## Seleccion de variables
+
+**Inferencia**
+
+a. Cuando $n>>p$ y $\boldsymbol{X}$ de dimension $n\times p$ es de **rango completo** (i.e. ninguna columna es una combinacion lineal de las otras), entonces el estimados de $\beta$ estara en funcion de 
+$$
+(\boldsymbol{X}'\boldsymbol{X})^{-1}\boldsymbol{X}'\boldsymbol{y},
+$$
+dependiendo del paradigma inferencia adoptado.
+
+b. Cuando $n>>p$ pero $\boldsymbol{X}$ de dimension $n\times p$ no es o casi no es de **rango completo** (i.e. una o varias columnas son combinaciones lienales de otras, o casi una o varias columnas son combinaciones lineales de las restantes, respectivamente), entonces $(\boldsymbol{X}'\boldsymbol{X})^{-1}$ no existe de manera **unica**, por lo que varios valores estimadores de $\beta$ existiran, y de hehco varios valores de $\beta_j$s seran redundantes (i.e. cercanos a cero o con varianzas extraordinariamente grandes).
+
+c. Cuando $p>n$ tendremos que tratarlo particularmente... (mas adelante en el curso).
+
+## Regularizacion y seleccion de variables
+
+**Regularizacion:** trata acerca de suavizar una funcion de perdida dada, garantizando que tenga un solo valor de minimizacion (colinealidad en regresion lo que implica es que la verosimilitud tiene multiples nodos en distintos valores de $\beta_j$s). Esto se realiza a traves de un procedimiento de **reduccion** (**shrinking**) la funcion en alguna direccion (casos en los que $\beta_j$s son cercanos a $0$).
+
+**Seleccion de variables:** trata acerca de la exploracion de diferentes combinaciones de las $p$ variables explicativas en $X$ con el proposito de encontrar la configuracion que mejor explique (con menor varianza) la relacion de $Y$ con la configuracion de $X_j$s relevante.
+
+**Ambols procedimientos reducen, en cierta forma, la dimensionalidad de $p$ covariables a un numero $q$ menor de covariables.**
+
+
+## *Ridge regression*
+
+Una forma de entender este procedimiento de **regularizacion** es a traves de un problema de minimizacion con restricciones, en el que la funcion de perdida $L(\beta,\sigma|y,X)$ se minmimiza sujeto a que la norma del vector de coeficientes de regresion no exceda de un cierto unmbral, i.e. se minimiza
+$$
+L^{r}(\beta,\sigma|y,X)=L(\beta,\sigma|y,X) + \lambda ||\beta||^2,
+$$
+siendo $\lambda$ el multiplicador de Lagrange empleado para imponer la restriccion descrita. 
+
+* Valores grandes de $\lambda$ inducen penalizaciones significativas sobre valores de $\beta_j$s poco verosimiles, reduciendolos a $0$
+
+* Valores pequenos de $\lambda$ inducen penalizaciones laxas. En el caso limite $\lambda \approx 0$ tenemos casi el modelo original. 
+
+## Inferencia como optimizacion
+
+Tanto en el paradigma bayesiano como frecuentista, los metodos de regularizacion estan extrechamente ligados. 
+
+La solucion, en ambos casos, para $\beta$ sera una funcion de 
+$$
+\left(\boldsymbol{X}'\boldsymbol{X}+\lambda \boldsymbol{I}\right)^{-1}\boldsymbol{X}'\boldsymbol{y},
+$$
+para $\lambda > 0$, encontrando valores de $\lambda$ que induzcan que 
+$$
+\left(\boldsymbol{X}'\boldsymbol{X}+\lambda \boldsymbol{I}\right)
+$$
+sea invertible  (rango completo).
+
+## Regression LASSO
+
+Otro metodo de regularizacion es el LASSO, en el que la funcion de perdida se suaviza imponiendo la restriccion de un operador de seleccion LASSO (*least-absolute-shrinkage and selector operator*), en cuyo caso la funcion de perdida se define como
+$$
+L^{1}(\beta,\sigma|y,X) = L(\beta,\sigma|y,X) + \lambda ||\beta||_{1},
+$$
+donde 
+$$||\beta||_{1}=\sum_{j=1}^{p}|\beta_j|,$$ 
+es la norma $L_1$ de $\beta$.
+
+Similarmente al caso **ridge**,
+
+* Valores de $\lambda$ pequenos o cercanos a cero corresponbden vagamente al caso tradicional,
+
+* Valores de $lambda$ grandes tienden a penalizar significativamente multicolinealidad en $X_j$s combinada con falta de predictivilidad (correlacion) de estas variables con $Y$.
+
+## Vinculacion con el paradigma bayesiano
+
+Ambos casos de regularizacion (**ridge** y **LASSO**, asi como muchos otros) pueden verse dentro del contexto bayesiano, considerando que la funcion de penalizacion asociada con el multiplicador de lagrange asociado con la funcion de perdida pueda incorporarse en la verosimilitud como una distribucion de probabilidad inicial sobre $\beta$ degenerada. 
+
+En este caso, el _tradicional supuesto de conjugacidad_ se relaja, empleando distribuciones iniciales no conjugada, como distribuciones de Laplace o degeneradas en $0$ (no absolutamente continuas). 
+
+Adicional, el paradigma bayesiano, permite identificar el valor de $\lambda$ que mejor se adecua a los datos, a traves de una distribucion parametral e inferencia simultanea sobre este componente.
+ 
+# Parte 2 - Practica
+
+## Modelo
+
+## Ejercicio de simulacion
+
+```{r}
+set.seed(101)
+p <- 2
+n <- 50
+X <- matrix(rnorm(p * n), nrow = n, ncol = p)
+y <- rnorm(n, 0, 1)
+D <- 1:p
+```
+
+```{r}
+reps = 10000
+# realizaciones de la distribucion normal
+theta1 <- matrix(0, nrow = reps, ncol = p)
+theta2 <- matrix(0, nrow = reps, ncol = p)
+```
+
+## Ejercicio de simulacion
+
+Generamos datos simulados de la distribucion normal.
+
+```{r echo=FALSE}
+library(mvtnorm)
+in_built <- function(i) {
+    foo <- qr.solve(t(X) %*% X + solve(diag(D, p)))
+    ret <- rmvnorm(1, mean = foo %*% t(X) %*% y, sigma = foo)
+}
+```
+
+```{r echo=FALSE}
+fast_gauss <- function(i) {
+    u <- rnorm(p, 0, 1) * sqrt(D)
+    delta <- rnorm(n, 0, 1)
+    v <- X %*% u + delta
+    w = qr.solve((X %*% diag(D, p) %*% t(X) + diag(1, n)), y - v)
+    
+    ret <- u + diag(D, p) %*% t(X) %*% w
+}
+```
+
+```{r}
+theta1 <- t(sapply(1:reps, in_built))
+theta2 <- t(sapply(1:reps, fast_gauss))
+```
+
+```{r}
+p <- 50
+n <- 100
+X <- matrix(rnorm(p * n), nrow = n, ncol = p)
+y <- rnorm(n, 0, 1)
+D <- 1:p
+```
+
+```{r echo=FALSE}
+if(require("rbenchmark")==FALSE){
+  install.packages("rbenchmark")
+}
+library("rbenchmark")
+
+if(require("monomvn")==FALSE){
+  install.packages("monomvn")
+}
+library("monomvn")
+```
+
+```{r}
+benchmark(in_built(1), fast_gauss(1), replications = 1000)
+```
+
+```{r}
+# just example data
+set.seed(1233)
+X <- scale(matrix(rnorm(30),ncol=3))[,]
+set.seed(12333)
+Y <- matrix(rnorm(10, X%*%matrix(c(-0.2,0.5,1.5),ncol=1), sd=0.8),ncol=1)
+
+library(monomvn) 
+## Lasso regression
+reg.las <- regress(X, Y, method="lasso")
+
+## Bayesian Lasso regression
+reg.blas <- blasso(X, Y)
+```
+
+
+## Regresion `lasso`
+
+Un estimador alternativo popular es el estimador de regresion `lasso`. En esta sesion se explica como se pueden calcular las estimaciones de regresion de `lasso` iterando las siguientes dos lineas de codigo:
+
+```
+u <- solve( Q * v%*%t(v) + lambda*diag(p)/2 )%*%( l*v )
+
+v <- solve( Q * u%*%t(u) + lambda*diag(p)/2 )%*%( l*u )
+```

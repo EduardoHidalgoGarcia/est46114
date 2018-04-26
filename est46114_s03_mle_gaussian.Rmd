@@ -1,0 +1,362 @@
+---
+output: 
+  pdf_document:
+    citation_package: natbib
+    keep_tex: true
+    fig_caption: true
+    latex_engine: pdflatex
+    template:  C:/Users/jcmo/Dropbox/svm-sources/svm-latex-ms.tex
+title: "S03 - Distribucion Gaussiana (Inferencia)"
+#thanks: "Agradecimientos..."
+author: 
+- name: "Juan Carlos Martinez-Ovando"
+  affiliation: ITAM
+abstract: " "
+keywords: "Multivariate normal, maximum likelihood."
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: margin=1in
+fontfamily: mathpazo
+fontsize: 11pt
+# spacing: double
+#bibliography: C:/Users/jcmo/Dropbox/@BibTeX/ReferencesJCMO.bib
+#biblio-style: apsr
+endnote: no
+---
+
+## Paquetes
+
+### *Loading*
+
+Cargamos los paquetes que usaremos en estas ilustraciones.
+
+```{r loading, echo=FALSE}
+if (require("fields") == FALSE){
+  install.packages("fields")
+}
+if (require("mnormt") == FALSE){
+  install.packages("mnormt")
+}
+if (require("MCMCpack") == FALSE){
+  install.packages("MCMCpack")
+}
+if (require("actuar") == FALSE){
+  install.packages("actuar")
+}
+if (require("ggplot2") == FALSE){
+  install.packages("ggplot2")
+}
+library("fields","mnormt","MCMCpack","actuar")
+library("ggplot2")
+```
+
+# Parte 1 - Inferencia via MLE
+
+## Intuicion
+
+### Caso Univariado ($p=1$)
+
+Retomemos el caso univariado de la distribucion gaussiana, con densidad
+
+$$
+f(x|\mu,\sigma^2)
+= 
+(2\pi)^{-1/2} \sigma^{-1} \exp\left\{-(1/2\sigma^2) (x-\mu)^2\right\}
+$$
+teniendo para $x$ soporte en $\Re$. 
+
+**Recordemos:** El espacio parametral para ($\mu$,$\sigma^2$) es $\Re$ $\times$ $\Re_{+}$.
+
+## Visualizacion
+
+### Funcion de verosimilitud
+
+Empezamos visualizando la forma de esta densidad, para $$X\sim N(x|\mu=114.5,\sigma^2=5.29).$$
+
+```{r density, include=TRUE}
+mu_x <- 114.4
+sigma2_x <- 5.29
+
+x <- seq(100,130,.1)
+y <- dnorm(x,mu_x,sqrt(sigma2_x))
+
+png("density.png", 490, 390)
+plot(x,y,type="l",xlab="X",ylab="f(x)",cex=5,lwd=5)
+
+xloc = 114.4
+yloc = dnorm(xloc,mu_x,sqrt(sigma2_x))
+lines(c(xloc,xloc),c(-1,yloc),cex=5,lwd=5,lty=2)
+lines(c(00,xloc),c(yloc,yloc),cex=5,lwd=5,lty=2)
+
+xloc=110
+yloc = dnorm(xloc,mu_x,sqrt(sigma2_x))
+lines(c(xloc,xloc),c(-1,yloc),cex=5,lwd=5,lty=3)
+lines(c(00,xloc),c(yloc,yloc),cex=5,lwd=5,lty=3)
+dev.off()
+```
+
+## Visualizacion
+
+### Funcion de densidad
+
+En este caso la variabilkidad esta restringida a $X$ tomando $\mu$ y $\sigma$ fijos.
+
+![Densidad gaussiana unidimensional](density.png)
+
+## Visualizacion
+
+### Funcion de verosimilitud para $\mu$ con base en un dato $x=112$
+
+```{r likelihood, include=TRUE}
+mu = seq(100,124,.01)
+x = 112
+sigma2 = 5.29
+y = dnorm(x,mu,sqrt(sigma2))
+
+png("likelihood.png", 490, 390)
+plot(mu,y,type="l",xlab=expression(mu[x]),ylab=expression(paste("L(",mu[x],"|x,",sigma[x]^2,")")),cex=3,lwd=5,main=expression(paste("Verosimilitud para ",mu[x])))
+muloc=112
+yloc=dnorm(x,muloc,sqrt(sigma2))
+lines(c(muloc,muloc),c(-1,yloc),cex=5,lwd=5,lty=2)
+lines(c(00,muloc),c(yloc,yloc),cex=5,lwd=5,lty=2)
+dev.off()
+```
+
+## Visualizacion
+
+### Funcion de verosimilitud para $mu$ con base en un dato $x=112$
+
+En este caso la variabilidad esta referida a $\mu$ tomando $x=112$ y $\sigma$ fijos.
+
+![Densidad gaussiana unidimensional](likelihood.png)
+
+## Visualizacion
+
+### Funcion de verosimilitud para $\mu$ con base en una muestra
+
+```{r likelihood_n, include=TRUE}
+perf = matrix(c(10,12,14,16,12))
+iq = c(112,113,115,118,114)
+
+#for the likelihood (without a log)
+mu = seq(100,124,.1)
+mudim = dim(matrix(mu))[1]
+y = mu
+sigma2_x = 5.29
+
+for (i in 1:mudim) {
+  likelihood = 1
+  for (j in 1:5) {
+    likelihood=likelihood*dnorm(iq[j],mu[i],sqrt(sigma2_x))
+  }
+  y[i]=likelihood
+}
+
+# Maximum likelihood
+maxL = max(y)
+
+# ubicacion
+MLEmu = mu[which.max(y)]
+
+png("likelihood_n.png", 490, 390)
+plot(mu,y,type="l",xlab=expression(mu[x]),ylab=expression(paste("L(",mu[x],"|x,",sigma[x]^2,")")),lwd=5)
+lines(c(MLEmu,MLEmu),c(-1,maxL),lwd=5,lty=2)
+lines(c(90,MLEmu),c(maxL,maxL),lwd=5,lty=2)
+dev.off()
+```
+
+## Visualizacion
+
+### Funcion de verosimilitud para $\mu$ con base en una muestra
+
+En este caso la variabilidad esta referida a $\mu$ tomando los datos y $\sigma$ fijos.
+
+![Verosimilitud gaussiana unidimensional](likelihood_n.png)
+
+## Visualizacion
+
+### Funcion de log-verosimilitud para $\mu$ con base en una muestra
+
+```{r log_likelihood_n, include=TRUE}
+mu = seq(100,124,.1)
+mudim = dim(matrix(mu))[1]
+y = mu
+
+for (i in 1:mudim) {
+  likelihood = 0
+  for (j in 1:5) {
+    likelihood=likelihood+dnorm(iq[j],mu[i],sqrt(sigma2_x),log=TRUE)
+  }
+  y[i]=likelihood
+}
+#  Maximo
+maxLogL = max(y)
+
+# Ubicacion
+MLEmu = mu[which.max(y)]
+
+png("log_likelihood_n.png", 490, 390)
+plot(mu,y,type="l",xlab=expression(mu),ylab="logL",lwd=5)
+lines(c(MLEmu,MLEmu),c(-125,maxLogL),lwd=5,lty=2)
+lines(c(90,MLEmu),c(maxLogL,maxLogL),lwd=5,lty=2)
+dev.off()
+```
+
+## Visualizacion
+
+### Funcion de verosimilitud para $\mu$ con base en una muestra
+
+En este caso la variabilidad esta referida a $\mu$ tomando los datos y $\sigma$ fijos.
+
+![Verosimilitud gaussiana unidimensional](log_likelihood_n.png)
+
+## Visualizacion
+
+### Funcion de verosimilitud conjunta
+
+```{r joint_likelihood_n, include=TRUE}
+iq = matrix(c(112,113,115,118,114))
+n = dim(matrix(iq))[1]
+mu = matrix(seq(114.3,114.5,.01))
+nstep = dim(matrix(mu))[1]
+
+sigma = matrix(seq(2.0581,2.0601,.0001))
+dim(sigma)
+dim(mu)
+
+x=matrix(0,nstep,1)
+y=matrix(0,nstep,1)
+z=matrix(0,nstep,nstep)
+
+maxval = -999999
+maxmu = 0
+maxsigma = 0
+for (i in 1:nstep){
+  for (j in 1:nstep){
+    x[i]=mu[i]
+    y[j]=sigma[j]^2
+    z[i,j]=0
+    
+    for (k in 1:n) {
+      z[i,j] = z[i,j]+dnorm(iq[k],mu[i],sigma[j],log=TRUE)
+    }
+    
+    if (z[i,j]>maxval) {
+      maxval = z[i,j]
+      maxmu=mu[i]
+      maxsigma=sigma[j]
+    }
+    
+  }
+  
+}
+```
+
+## Visualizacion
+
+### Funcion de verosimilitud conjunta
+
+```{r joint_likelihood_n_2, include=TRUE}
+maxmu
+maxsigma
+
+png("joint_likelihood_n.png", 490, 390)
+grid.list=list(x=x,y=y)
+mygrid=make.surface.grid(grid.list)
+out=list(x=grid.list$x,y=grid.list$y,z=z)
+par(mfrow=c(1,2))
+plot.surface(out,type="p",xlab="Media",ylab="Varianza",zlab="Log L",main="")
+plot.surface(out,type="c",xlab="test",ylab="Slope",zlab="SSE",main="Log Likelihood")
+max(z)
+dev.off()
+```
+
+## Visualizacion
+
+### Funcion de verosimilitud conjunta para $(\mu,\sigma^2)$
+
+En este caso la variabilidad esta referida a $\mu$ tomando los datos y $\sigma$ fijos.
+
+![Verosimilitud gaussiana conjunta unidimensional](joint_likelihood_n.png)
+
+
+# Parte 2 - Distribuciones para parametros
+
+## Covarianzas
+
+### Distribucion Wishart
+
+Una matriz $\Sigma$ de dimension $(p\times p)$ simetrica positivo definida tiene una distribucion _inverse-Wishart_, $\Sigma \sim Wi(S,\nu)$, donde $S$ es una matriz simetrica no singular, conocida como `matrix de escala` y $\nu > (p-1)/2$, conocido como `grados de libertad`. 
+
+El valor esperado de $\Sigma$ es
+$$
+\mathbb{E}(\Sigma)=\nu S^{-1}.
+$$
+
+**Casos particulares:**
+
+* Cuando $p=1$ y $S=1$ la distribucion anterior se reduce a la distribucion $\chi^{2}$ con $\nu$ grados de libertad.
+
+* Cuando $p=1$ la distribucion se reduce a la Gamma. Cuando $\nu=1$ obtenermos la distribucion exponencial.
+
+* Si $\Sigma$ se distribuye Wishart, entonces $\Sigma^{-1}$ tiene distribucion _inverse-Wishart_.
+
+## Covarianzas
+
+### Distribucion Wishart
+
+Una propiedad imporante de a distribucion Wishart (y _inverse-Wishart_) es que las distribuciones de sus marginales sobre la diagonal son gamma (o _inverse-gamma_). 
+
+En esta seccion visualizaremos las distribuciones marginales de los elementos de una matriz de varianzas y covarianzas con distribucion `inverse-Wishart`.
+
+a) Hiperparametros de la distribucion inverse-Wishart
+
+Primero, definimos los hiper-parametros de la distribucion. En este caso son dos, un parametro escalar para los `grados de libertad` y una matrix simetrica positivo definida, que es el parametro `matriz de escala`.
+
+```{r}
+S <- matrix(c(1,.3,.3,2),2,2)   # matriz de escala
+nu  <- 5                          # grados de libertad
+```
+
+## Covarianzas
+
+### Distribucion Wishart
+
+b) Distribuciones marginales de las varianzas
+
+Este es un resultados importante. Si $\Sigma \sim invW(S, \nu)$, entonces 
+$$
+\sigma_{ii} \sim invGa(\alpha = \nu/2, \beta = S_{ii}/2),
+$$
+donde $\Sigma=\left(\sigma_{ij}\right)_{i,j=1}^{p}$.
+
+```{r}
+limits <- sapply(diag(S), 
+                function(x) qinvgamma(c(.01, .99), 
+                shape = nu/2, scale = x/2))
+```
+
+Podemos graficar las distribuciones marginales en la misma escala.
+
+```{r}
+limits <- c(min(limits[1, ]), max(limits[2, ]))
+var <- seq(limits[1], limits[2], length = 501)
+density <- do.call('c',
+       lapply(diag(S),
+         function(ss) dinvgamma(var,shape = nu/2,scale = ss/2)))
+
+priordf.var <- data.frame(comp = factor(c(rep('sigma_11', length(var)),
+                                          rep('sigma2_22', length(var)))),
+                          var = c(var, var),
+                          density)
+```
+
+Plot prior curves and true value
+
+```
+png("aaa.png", 490, 390)
+ggplot(priordf.var, aes(var, density, col = comp)) + 
+  geom_line() +
+  theme_bw()
+dev.off()
+```
+

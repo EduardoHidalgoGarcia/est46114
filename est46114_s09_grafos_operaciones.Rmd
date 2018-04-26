@@ -1,0 +1,170 @@
+---
+title: "S09: Modelos de Grafos - Operaciones"
+author: "Juan Carlos Martinez-Ovando"
+date: "Primavera 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+----------------------------------
+
+----------------------------------
+
+### **Resumen y objetivos**
+
+* Algunas operaciones que pueden definirse sobre `grafos`
+
+* Emplearemos la libreria `igraph` de `R`:
+
+```{r preambulo, include=FALSE}
+if(!require('diagram')){install.packages("diagram")}
+library("diagram")
+if(!require('igraph')){install.packages("igraph")}
+library("igraph")
+```
+
+----------------------------------
+
+----------------------------------
+
+# Algoritmos sobre grafos
+
+Incluidos en la libreria `igraph`:
+
+## A1. Clustering
+
+* `membership`: vector numérico que da el identificador del clúster al que pertenece cada vértice.
+
+* `csize`: vector numérico que da los tamaños de los clusters.
+
+* `No`: constante numérica, número de clusters
+
+```{r}
+require("igraph")
+g <- erdos.renyi.game(20, 1/20)
+summary(g)
+plot(g)
+clusters(g)
+```
+
+## A2. Estadisticas sobre grafos
+
+Hay muchas estadísticas que podemos buscar para obtener una idea general de la forma del grafo. En el nivel más alto, podemos ver estadísticas resumidas del grafo mismo. Esto incluye:
+
+ - Tamaño (número de `nodos` y `aristas`)
+
+ - Densidad, que mide si el grafo es denso ($|E|$ proporcional a $|V|^2$) o escaso ($|E|$ proporcional a $|V|$)
+
+ -  Conectividad del `grafo` (i.e., si gran parte de los `nodos` puede llegar a los demás) o si está desconectada (muchas islas)
+ 
+ - Diámetro del grafo, que mide la distancia más larga entre dos `nodos` cualesquiera
+
+ - `Medidas de reciprocidad` en un grafo dirigido, i.e. ¿cuán simétricas son las relaciones?
+
+ -  Distribución de `degree`s de entrada / salida
+
+```{r}
+set.seed(121)
+# Definimos un grafo aleatorio
+g <- erdos.renyi.game(200, 0.02)
+plot(g, layout=layout.fruchterman.reingold, 
+       vertex.label=NA, vertex.size=3)
+# Numero de nodos
+length(V(g))
+# Numero de `edges`
+length(E(g))
+# Densidad = Num.edges / Poss.edges
+graph.density(g)
+# Num. islands
+clusters(g)$no
+# Coeficienteglobal de agrupamiento
+transitivity(g, type="global")
+# `Edge` conectividad
+edge.connectivity(g)
+# Adhesion
+graph.adhesion(g)
+# Diametro
+diameter(g)
+# Reciprocidad
+reciprocity(g)
+```
+
+
+```{r}
+# Creamos un grafo aleatorio de Renyi
+g <- erdos.renyi.game(9, 0.5)
+plot(g, layout=layout.fruchterman.reingold)
+# Calculamos la matriz de trayectorias mas cortas, i.e. conectividad
+shortest.paths(g)
+M <- matrix(rep(0, 81), nrow=9)
+for (i in 1:9) {
+  for (j in 1:9) {
+    if (i == j) {
+      M[i, j] <- -1
+    } else {
+      M[i, j] <- edge.connectivity(g, i, j)
+    }
+  }
+}
+M
+```
+
+## A3. Medidas de centralidad
+
+En el nivel de grano fino, podemos ver estadísticas de `nodos` individuales, como una medida de centralidad acerca de la importancia social de un `nodo`
+
+ -  La `centralidad de grados` otorga una puntuación más alta a un `nodo` que tiene un alto grado de entrada / salida
+ 
+ -  La `centralidad de proximidad` da una puntuación más alta a un `nodo` que tiene una distancia de trayecto corto a todos los otros `nodos`
+
+ - La `centralidad entre estados` da una puntuación más alta a un `nodo` que se encuentra en muchos caminos más cortos de otros pares de `nodos`
+
+ - La `centralidad del vector` propio otorga una puntuación más alta a un nodo si se conecta a muchos nodos de alta puntuación
+
+ - El `coeficiente de cluster local` mide cómo los vecinos deun `nodo` están interconectados entre sí, lo que significa que el `nodo` se vuelve menos importante.
+
+```{r}
+# Degree
+degree(g)
+# Closeness
+closeness(g)
+# Betweenness
+betweenness(g)
+# Coeficiente local de agrupamiento
+transitivity(g, type="local")
+# Eigenvector centrality
+evcent(g)$vector
+ 
+order(degree(g))
+order(closeness(g))
+order(betweenness(g))
+order(evcent(g)$vector)
+```
+
+En estudios sociales, Drew Conway ha encontrado que las personas con baja centralidad en `eingenvector` pero alta centralidad en `betweeness` son importantes guardianes, mientras que las personas con alta centralidad en `eigenvector` pero baja centralidad en `betweeness` tienen contacto directo con personas importantes. Por lo tanto, permite representar la centralidad de `eigenvector` contra la centralidad de `betweeness`.
+
+```{r}
+# Creamos un grafo
+g1 <- barabasi.game(100, directed=F)
+g2 <- barabasi.game(100, directed=F)
+g <- g1 %u% g2
+lay <- layout.fruchterman.reingold(g)
+# Graficamos la centralidad `eigevector` y `betweenness`
+plot(evcent(g)$vector, betweenness(g))
+text(evcent(g)$vector, betweenness(g), 0:100, 
+       cex=0.6, pos=4)
+V(g)[12]$color <- 'red'
+V(g)[8]$color <- 'green'
+plot(g, layout=lay, vertex.size=8,vertex.label.cex=0.6)
+```
+
+## Referencias
+
+* **Lauritzen** - Graphical Models
+
+* **Koller y Firiedman** - Probabilistic Graphical Models Principles and Techniques
+
+* **Hoejsgaard et al** - Graphical models in R

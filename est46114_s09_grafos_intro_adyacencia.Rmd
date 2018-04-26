@@ -1,0 +1,78 @@
+
+**Mas sobre matrices de adyacencia*`**
+  
+  * E11: **graph.adjacency**
+  
+  Consideramos ahora el ejemplo de la matriz de adyacencia `mat25.txt` del repositorio de datos en UCLA. Convertimos los datos en `mat25` como una matriz en `R`.
+
+`betweenness` es una medida de la centralidad de un vértice dentro de una gráfica (también hay `edge.betweeness`, que no se discute aquí). `betweenness` cuantifica el número de veces que un `nodo` actúa como un puente a lo largo del camino más corto entre otros dos `nodos`.
+
+```{r}
+# Importamos los datos
+x <- read.table("http://www.ats.ucla.edu/stat/data/mat25.txt", 
+                header = FALSE)
+dim(x)
+
+network <- as.matrix(x)
+g1 <- graph.adjacency(network)  
+g1
+plot(g1)
+
+# Betweeness
+(b1 <- betweenness(g1, directed = FALSE))
+```
+
+En gráficos conectados hay una métrica de distancia natural entre todos los pares de nodos, definidos por la longitud de sus trayectorias más cortas. El `farness` de un `nodo` se define como la suma de sus distancias a todos los otros `nodos`, y su `closeness` se define como la inversa de `farness`.
+
+```{r}
+(c1 <- closeness(g1, mode = "out"))
+```
+
+`degree` (o `valency`) de un vértice de un grafo es el número de aristas incidentes al vértice, con `nodos` contados dos veces.
+
+```{r}
+(d1 <- degree(g1, mode = "out"))
+```
+
+Importamos tambien `edge list` del repositorio en UCLA. Lo importamos en formato `edgelist`.
+
+```{r}
+xlist <- read.graph("http://www.ats.ucla.edu/stat/data/elist1.txt", 
+                    format = "edgelist")
+str(xlist)
+plot.igraph(xlist)
+```
+
+Observamos en nuestro objeto gráfico que tiene 7 vértices, aunque sólo enumeramos aristas que van desde los vértices 1 a 6. `R` hace algunas suposiciones a menos que se especifique lo contrario:
+  
+  Los vértices se indexan desde cero y pasan por el vértice con el número más alto en la lista con `edges`. Se puede especificar que su gráfico contenga más vértices que éste, pero no menos.
+
+`edges` define al conjunto de `nodos` dirigidos pasando del primer vértice al segundo.
+
+Así que vamos a modificar teniendo en cuenta que tenemos 8 vértices y el gráfico está indirectamente:
+  
+  ```{r}
+xlist.8un <- read.graph("http://www.ats.ucla.edu/stat/data/elist1.txt",
+                        format = "edgelist", 
+                        n = 8, 
+                        directed = FALSE)
+str(xlist)
+summary(xlist)
+plot.igraph(xlist.8un)
+```
+
+***Comentarios:**
+  
+  * Nuestro primer gráfico tiene un vértice 0 sin conexión y flechas en los `edges`.  
+
+* Nuestro segundo grafo tiene sin conexión 0 y 7 vértices y sin flechas en los bordes (`edges`). 
+
+* * E13: **graph**
+  
+  También podríamos ingresar nuestros datos en un solo vector de índices de vértices donde un `edge` conecta la primera y segunda, tercera y cuarta, quinta y sexta entradas y así sucesivamente.
+
+```{r}
+g2 <- graph(c(1, 2, 2, 3, 2, 4, 2, 5, 4, 6, 5, 7, 7, 5))
+str(g2)
+plot.igraph(g2)
+```
