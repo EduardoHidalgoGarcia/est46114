@@ -1,0 +1,447 @@
+\documentclass[11pt,]{article}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\newcommand*{\authorfont}{\fontfamily{phv}\selectfont}
+\usepackage[]{mathpazo}
+
+
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+
+
+
+\usepackage{abstract}
+\renewcommand{\abstractname}{}    % clear the title
+\renewcommand{\absnamepos}{empty} % originally center
+
+\renewenvironment{abstract}
+ {{%
+    \setlength{\leftmargin}{0mm}
+    \setlength{\rightmargin}{\leftmargin}%
+  }%
+  \relax}
+ {\endlist}
+
+\makeatletter
+\def\@maketitle{%
+  \newpage
+%  \null
+%  \vskip 2em%
+%  \begin{center}%
+  \let \footnote \thanks
+    {\fontsize{18}{20}\selectfont\raggedright  \setlength{\parindent}{0pt} \@title \par}%
+}
+%\fi
+\makeatother
+
+
+
+
+\setcounter{secnumdepth}{0}
+
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+
+
+\title{S12 - Modelos de Topicos Latentes  }
+
+
+
+\author{\Large Juan Carlos Martinez-Ovando\vspace{0.05in} \newline\normalsize\emph{ITAM}  }
+
+
+\date{}
+
+\usepackage{titlesec}
+
+\titleformat*{\section}{\normalsize\bfseries}
+\titleformat*{\subsection}{\normalsize\itshape}
+\titleformat*{\subsubsection}{\normalsize\itshape}
+\titleformat*{\paragraph}{\normalsize\itshape}
+\titleformat*{\subparagraph}{\normalsize\itshape}
+
+
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+\usepackage[strings]{underscore} % protect underscores in most circumstances
+
+
+
+\newtheorem{hypothesis}{Hypothesis}
+\usepackage{setspace}
+
+\makeatletter
+\@ifpackageloaded{hyperref}{}{%
+\ifxetex
+  \PassOptionsToPackage{hyphens}{url}\usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \PassOptionsToPackage{hyphens}{url}\usepackage[unicode=true]{hyperref}
+\fi
+}
+
+\@ifpackageloaded{color}{
+    \PassOptionsToPackage{usenames,dvipsnames}{color}
+}{%
+    \usepackage[usenames,dvipsnames]{color}
+}
+\makeatother
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={Juan Carlos Martinez-Ovando (ITAM)},
+             pdfkeywords = {Probabilistic graphical models, latent Dirichlet allocation, variational
+bayes.},  
+            pdftitle={S12 - Modelos de Topicos Latentes},
+            colorlinks=true,
+            citecolor=blue,
+            urlcolor=blue,
+            linkcolor=magenta,
+            pdfborder={0 0 0}}
+\urlstyle{same}  % don't use monospace font for urls
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+
+% add tightlist ----------
+\providecommand{\tightlist}{%
+\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\begin{document}
+	
+% \pagenumbering{arabic}% resets `page` counter to 1 
+%
+% \maketitle
+
+{% \usefont{T1}{pnc}{m}{n}
+\setlength{\parindent}{0pt}
+\thispagestyle{plain}
+{\fontsize{18}{20}\selectfont\raggedright 
+\maketitle  % title \par  
+
+}
+
+{
+   \vskip 13.5pt\relax \normalsize\fontsize{11}{12} 
+\textbf{\authorfont Juan Carlos Martinez-Ovando} \hskip 15pt \emph{\small ITAM}   
+
+}
+
+}
+
+
+
+
+
+
+\vskip 6.5pt
+
+
+\noindent  \section{Mezclas Probabilisticas}\label{mezclas-probabilisticas}
+
+Esta clase de modelos es ampliamente usada en la estadistica,
+\emph{machine learning} y metodos semi- y no parametricos, generalmente.
+A su vez, es empleada profusamente para realizar \textbf{clasificacion
+no supervisada} de datos, con el proposito de revelar \emph{agrupaciones
+subyacentes} en datos.
+
+Aun cuando estos modelos son empleados para realizar
+\textbf{clasificacion supervisada}, su origen es el de esimacion de
+densidades.
+
+Pensemos que \(X\) es una variable aleatoria (absolutamente) continua,
+con funcion de densidad \(f(x)\). En vez de emplear o comprometerse con
+solo una funcion de densidad (parametrica), el modelo contempla que la
+densidad de \(X\) puede describirse como una combinacion lineal convexa
+de multiples funciones de densidades, i.e. \[
+f(x)=\sum_k w_k f(x|\theta_k),
+\] donde las \(f(\cdot|\theta_k)\)s son funciones parametricas de
+densidades, las cuales difieren solo en terminos de los diferentes
+valores de los parametros \(\theta_k\)s, y los pesos de la mezcla
+\(w_k\)s definen una combinacion lineal convexa de las
+\(f(\cdot|\theta_k\)s.
+
+La combinacion lineal convexa anterior es bastante flexible, pues
+puededefinirse de manera \emph{densa} en la clase de \textbf{todas} las
+distribuciones absolutamente continuas con soporte en \(\mathcal{X}\)
+(e.g.~densidades multimodales, sesgadas, simetricas, etc.).
+
+\subsubsection{?`Cual es la relacion con metodos de clasificacion no
+supervisada?}\label{cual-es-la-relacion-con-metodos-de-clasificacion-no-supervisada}
+
+Bueno, pues un resultado \emph{muy circunstancial}, para efectos
+inferenciales, permite extender el modelo con la inclusion de
+\textbf{variables latentes}, \(z\), que permiten indicar de que
+compoente entres las \(f(|\theta_k)\) la variable \(X\) es generada.
+Asi, la expresion extendida del modelo resulta en, \[
+f(x,k)=P(z=k)\times P(x|z=k)= w_k \times f(x|\theta_k) \times 1(z=k),
+\] siendo entonces las \(w_k\)s entendidas como las probabilidades (de
+un procedimiento multinomial excluyente) de que la variable \(x\) sea
+descrita por el componente \(f(x|\theta_k)\).
+
+Para un conjunto de datos, \(x_1,\ldots,x_n\), se sigue entonces que la
+verosimilitud (extendida) incluyendo las variables latentes,
+\(z_1,\ldots,z_n\), esta dada por \[
+lik(w,\theta,z|x)=\prod_{i}w_{z_i}f(x_i|\theta_{z_i})=\prod_k w_{k}^{\#\{z_i=k\}}f(\{x_i:z_i=k\}|\theta_k),
+\] por el componente multinomial.
+
+Asi, el procedimiento extendido da origen a un \textbf{procedimiento
+circunstancial} de clusterizacion. Es un metodo bastante flexible, pues
+la clasificacion no supervisada descansa en argumentos probabilisticos y
+no en una nocion de distancia (como otros metodos no supervisados de
+clasificacion).
+
+Lo anterior da origen a que podamos extender la nocion de mezclas
+probabilisticas a contextos donde las variables no sean (absolutamente)
+continias, sino \emph{discretas} y/o \emph{categoricas}, entre otras.
+
+\section{\texorpdfstring{\emph{Latent Dirichlet Allocation
+(LDA)}}{Latent Dirichlet Allocation (LDA)}}\label{latent-dirichlet-allocation-lda}
+
+El modelo LDA es un procedimiento de clasificacion ni supervisada de
+contenido de textos, cuya clasificacion resultante es entendida como la
+\emph{revelacion de topicos latentes}.
+
+Para este efecto, como hemos comentado antes, pensemos que un conjunto
+de textos, \(t_1,\ldots,t_n\) esta referido a un \textbf{diccionario
+lexico} con \(D\) palabras relevantes (no ordenadas). Cada texto es
+codificado vectorialmente como el vector de frecuencia de palabras en el
+diccionario lexico que aparecen en el mismo, i.e. \[
+t_i \approx x_i,
+\] donde \(x_i \in \mathbb{N}^{D}\) donde \(x_{id}\) es el numero de
+veces que la palabra \(d\) del diccionario lexico aparece en el texto
+\(t_i\), para \(d=1,\ldots,D\).
+
+De esta forma podemos pensar que la frecuencia de palabras de cada texto
+puede describirse con ladistribucion multinomial, \[
+x_i \sim Mult(x_i|N_i,\theta_1,\ldots,\theta_D),
+\] donde \(N_i\) es el numero de palabras en el texto \(i\) y las
+\(\theta_d\)s son las probabilidades de que la palabra \(d\) del
+diccionario lexico aparezca en el texto.
+
+\subsubsection{Topicos latentes}\label{topicos-latentes}
+
+Los topicos latentes de un conjunto de textos bajo LDA pueden asociarse
+con diferentes frecuencias/repeticiones de palabras o terminos,
+caracterizados a su vez por diferentes \(\theta_d\)s bajo la
+representacion multinomial.
+
+Asi, si pensamos que puede haber \(K\) posibles topicos latentes,
+podremos pensar en \(K\) posibles configuraciones de
+\((\theta_{ik},\ldots,\theta_{Dk})_{k=1}^{K}\) asociadas.
+
+De esta forma, adaptando el modelo de mezclas probabilisticas tenemos
+que la incertidumbre sobre el contenido de un texto puede describirse
+como \[
+p(x_i)=\sum_{k} w_k Mult(x_i|N_i,\theta_{1,k},\ldots,\theta_{D,k}),
+\] interpretando las \(w_k\)s como antes.
+
+Extendiendo a la inclusion de la variables asignacion latente, \(z_i\)
+tenemos \[
+p(x_i,z_i)=w_{z_i} Mult(x_i|N_i,\theta_{1,z_i},\ldots,\theta_{D,z_i}).
+\] El aprendizaje o inferencia estadistica en esta clase de modelos es
+bastante compleja, pues los calculos no pueden obtenerse de manera
+analitica cerrada.
+
+Bajo el paradigma bayesiano de inferencia, la estimación de los
+parametros y variables latentes descansan tipicamente en metodos
+numericos de simulacion basados en MCMC. Sin embargo, estos algoritmos
+son costosos computacionalmente y no escalables.
+
+En la actualidad, una alternativa para resolver la limitante anterior
+descansa hace uso de \textbf{aproximaciones variacionales}, que
+brevemente describimos a continuacion.
+
+\section{Variational Bayes}\label{variational-bayes}
+
+En el modelo anterior, las variables
+\((w,\theta)=(w_k,\theta_k)_{k\geq 1}\) definen el conjunto de
+parmaetros, mientras que \(z=(z_j)_{j=1}^{n}\) denota el conjunto de
+variables latentes. Inferencia sobre esta clase de modelos se basa en a
+distribucion final, \[
+p(w,\theta,z|x)\propto p(x|w,\theta,z)p(z|w,\theta) p(w,\theta).
+\] Como mencionamos, la idea de los metodos variacionales consiste en
+aproximar \(p(w,\theta,z|x)\) por una funcion \(q(w,\theta,z)\) de
+manera que \[
+p(x) = p(q) + KL(q,p),
+\] siendo \(KL(q,p)\) la divergencia de Kullback-Leibler entre \(p\) y
+\(q\), i.e. \[
+KL(q,p) = -\int \log\left(\frac{p(w,\theta,z|x)}{q(w,\theta,z)}\right)Q(d w,d \theta,d z).
+\]
+
+La idea es que \(KL(q,p)\) sea pequeña. De toda forma,
+\(\tilde{p}=\exp\{p(q)\}\) es una cota inferior de \(p(x)\).
+
+\emph{Variational Bayes} descansa sobre el procedimiento MAP (Maximum a
+Posteriori) como alternativa del enfoque general bayesiano. (Esto es
+bien justificado en terminos de teoria de la decision).
+
+Asi, en vez de maximizar \(p(w,\theta,z|x)\) el algoritmo maximiza
+\(q(w,\theta,z)\), por medio de minimizar \(KL(q,p)\).
+
+El algoritmo adapta justamente \(q(w,\theta,z)\), por lo que en la
+practica nunca alcanza a empatar \(q\) con \(p\). De esta forma, el
+procedimiento es aproximado. Mas aun, pues para acelerar los calculos
+computacionales, la eleccion de \(q(w,\theta,z)\) se restringe a una
+clase de distribuciones manejables.
+
+\section{Ilustacion}\label{ilustacion}
+
+\subsubsection{Paquetes}\label{paquetes}
+
+Empleamos en estas notas dos paquetes: \texttt{RTestTools}, empleado
+solo para recuperar los atos para la ilustracion de los procedimientos,
+y \texttt{topicmodels}, por la implementacion del algoritmo variacional
+para LDA. Esta ilustracion fue realizada en \texttt{MRO\ 3.4.4}.
+
+\begin{verbatim}
+if(!require('RTextTools')){install.packages("RTextTools")}
+if(!require('topicmodels')){install.packages("topicmodels")}
+\end{verbatim}
+
+\subsubsection{Datos}\label{datos}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(}\StringTok{"RTextTools"}\NormalTok{)}
+\KeywordTok{data}\NormalTok{(NYTimes)}
+\NormalTok{data <-}\StringTok{ }\NormalTok{NYTimes[ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{3100}\NormalTok{, }\DataTypeTok{size=}\DecValTok{1000}\NormalTok{,}\DataTypeTok{replace=}\NormalTok{F), ]}
+\KeywordTok{dim}\NormalTok{(data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1000    5
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      Article_ID      Date
+## 1518      27908  7-Mar-01
+## 1929      20338 22-Jul-02
+## 647       31507 18-Mar-98
+## 334       39467 18-Feb-97
+## 682       31857 28-Apr-98
+## 206       43575 12-Sep-96
+##                                                                 Title
+## 1518        Senate Votes to Repeal Rules Clinton Set on Work Injuries
+## 1929 More Say Yes to Foreign Service, But Not to Hardship Assignments
+## 647                           Chase Will Lay Off 2,250 in Latest Cuts
+## 334  U.S. to Pay New York Hospitals Not to Train Doctors, Easing Glut
+## 682       Restrictions on Iraq Will Stay in Force, U.N. Council Rules
+## 206      POLITICS: THE MONEY; A Hollywood Production: Political Money
+##                                                                      Subject
+## 1518                         Senate votes to repeal workplace injuries rules
+## 1929                                      hiring of Foreign Service officers
+## 647  Chase Manhattan, nation's largest bank plans to lay off 2,250 employees
+## 334     Federal government to pay New York hospitals not to train physicians
+## 682             U.N. Security Council votes to extend sanctions against Iraq
+## 206                                         clinton fundraising in hollywood
+##      Topic.Code
+## 1518          5
+## 1929         19
+## 647          15
+## 334           3
+## 682          16
+## 206          20
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{matrix <-}\StringTok{ }\KeywordTok{create_matrix}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(}\KeywordTok{as.vector}\NormalTok{(data}\OperatorTok{$}\NormalTok{Title),}
+                              \KeywordTok{as.vector}\NormalTok{(data}\OperatorTok{$}\NormalTok{Subject)), }
+                        \DataTypeTok{language=}\StringTok{"english"}\NormalTok{, }
+                        \DataTypeTok{removeNumbers=}\OtherTok{TRUE}\NormalTok{,}
+                        \DataTypeTok{stemWords=}\OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{k <-}\StringTok{ }\KeywordTok{length}\NormalTok{(}\KeywordTok{unique}\NormalTok{(data}\OperatorTok{$}\NormalTok{Topic.Code))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Implementacion del
+algoritmo}\label{implementacion-del-algoritmo}
+
+\begin{verbatim}
+library("topicmodels")
+lda.out <- LDA(matrix, k)
+summary(lda.out)
+\end{verbatim}
+
+\begin{verbatim}
+print(lda.out@gamma[1,])
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Referencias adicionales}\label{referencias-adicionales}
+
+\begin{itemize}
+\item
+  \textbf{Jordan}, Graphical Models, \emph{Statistical Science}
+\item
+  \textbf{Titterington}, ``Bayesian Methods for Neural Networks and
+  Related Modelos'', \emph{Statistical Science}
+\item
+  \textbf{Bishop}, \emph{Pattern Recognition and Machine Learning
+  (Book)}
+\item
+  \textbf{Minka \& Winn}, \texttt{infer.NET}, Microsoft Research,
+  \href{http://infernet.azurewebsites.net/}{link}
+\end{itemize}
+
+
+
+
+\newpage
+\singlespacing 
+\end{document}

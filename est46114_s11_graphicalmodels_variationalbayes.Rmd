@@ -1,0 +1,55 @@
+---
+output: 
+  pdf_document:
+    citation_package: natbib
+    keep_tex: true
+    fig_caption: true
+    latex_engine: pdflatex
+    template:  C:/Users/jcmo/Dropbox/svm-sources/svm-latex-ms.tex
+title: "S12 - Modelos de Topicos Latentes"
+#thanks: "Agradecimientos..."
+author: 
+- name: "Juan Carlos Martinez-Ovando"
+  affiliation: ITAM
+  abstract: ""
+keywords: "Probabilistic graphical models, latent Dirichlet allocation, variational bayes."
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: margin=1in
+fontfamily: mathpazo
+fontsize: 11pt
+# spacing: double
+#bibliography: C:/Users/jcmo/Dropbox/@BibTeX/ReferencesJCMO.bib
+#biblio-style: apsr
+endnote: no
+---
+
+# **Neural Networks**
+
+# Algoritmos Variacionales 
+  
+## a. Aproxmaci?n param?trica
+
+## b. Aproxmaci?n por factorizaci?n
+
+# Programaci?n probabil?stica y escalabilidad
+
+----------------------------------
+
+### Paquetes
+
+```{r}
+if(!require('RtextTools')){install.packages("RtextTools")}
+library("RtextTools")
+if(!require('topicmodels')){install.packages("topicmodels")}
+library("topicmodels")
+```
+
+### Referencias adicionales
+
+* **Jordan**, Graphical Models, *Statistical Science*
+
+* **Titterington**, "Bayesian Methods for Neural Networks and Related Modelos", *Statistical Science*
+
+* **Bishop**, *Pattern Recognition and Machine Learning (Book)*
+
+* **Minka & Winn**, `infer.NET`, Microsoft Research, [link](http://infernet.azurewebsites.net/)
