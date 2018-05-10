@@ -47,11 +47,13 @@ $$
 
 Cuando trabajamos con el modelo de regresion multiple, la _identificacion_ o _estimacion_ de $\beta$, obtenida mediante el paradigma frecuentista o bayesiano, se basa en encontrar el valor de $\beta$ que maximice (en cierta forma) la verosimilutid 
 $$
-lik\left(\beta,\sigma|\boldsymbol{y},\boldsymbol{X}\right) \propto \sigma^{-n/2}\exp\left\{-\frac{1}{2\sigma}\left(\boldsymbol{Y}-\boldsymbol{X}'\beta\right)'(\boldsymbol{Y}-\boldsymbol{X}'\beta\right)\right\},
+lik\left(\beta,\sigma|\boldsymbol{y},\boldsymbol{X}\right) \propto 
+\sigma^{-n/2}\exp\left\{-\frac{1}{2\sigma}\left(\boldsymbol{Y}-\boldsymbol{X}'\beta\right)'(\boldsymbol{Y}-\boldsymbol{X}'\beta\right)\right\},
 $$
 o, equivalentemente, mediante la minimizacion de una funcion de perdida asociada (errores cuadraticos, es el caso general), i.e.
 $$
-L\left(\beta,\sigma|\boldsymbol{y},\boldsymbol{X}\right) \propto \left(\boldsymbol{y}-\boldsymbol{X}'\beta\right)' (\boldsymbol{y}-\boldsymbol{X}'\beta\right),
+L\left(\beta,\sigma|\boldsymbol{y},\boldsymbol{X}\right) \propto 
+\left(\boldsymbol{Y}-\boldsymbol{X}'\beta\right)'(\boldsymbol{Y}-\boldsymbol{X}'\beta\right),
 $$
 en cuyo caso tenemos varios resultados para $\beta$.
 
@@ -128,91 +130,4 @@ En este caso, el _tradicional supuesto de conjugacidad_ se relaja, empleando dis
 
 Adicional, el paradigma bayesiano, permite identificar el valor de $\lambda$ que mejor se adecua a los datos, a traves de una distribucion parametral e inferencia simultanea sobre este componente.
  
-# Parte 2 - Practica
-
-## Modelo
-
-## Ejercicio de simulacion
-
-```{r}
-set.seed(101)
-p <- 2
-n <- 50
-X <- matrix(rnorm(p * n), nrow = n, ncol = p)
-y <- rnorm(n, 0, 1)
-D <- 1:p
-```
-
-```{r}
-reps = 10000
-# realizaciones de la distribucion normal
-theta1 <- matrix(0, nrow = reps, ncol = p)
-theta2 <- matrix(0, nrow = reps, ncol = p)
-```
-
-## Ejercicio de simulacion
-
-Generamos datos simulados de la distribucion normal.
-
-```{r echo=FALSE}
-library(mvtnorm)
-in_built <- function(i) {
-    foo <- qr.solve(t(X) %*% X + solve(diag(D, p)))
-    ret <- rmvnorm(1, mean = foo %*% t(X) %*% y, sigma = foo)
-}
-```
-
-```{r echo=FALSE}
-fast_gauss <- function(i) {
-    u <- rnorm(p, 0, 1) * sqrt(D)
-    delta <- rnorm(n, 0, 1)
-    v <- X %*% u + delta
-    w = qr.solve((X %*% diag(D, p) %*% t(X) + diag(1, n)), y - v)
-    
-    ret <- u + diag(D, p) %*% t(X) %*% w
-}
-```
-
-```{r}
-theta1 <- t(sapply(1:reps, in_built))
-theta2 <- t(sapply(1:reps, fast_gauss))
-```
-
-```{r}
-p <- 50
-n <- 100
-X <- matrix(rnorm(p * n), nrow = n, ncol = p)
-y <- rnorm(n, 0, 1)
-D <- 1:p
-```
-
-```{r echo=FALSE}
-if(require("rbenchmark")==FALSE){
-  install.packages("rbenchmark")
-}
-library("rbenchmark")
-
-if(require("monomvn")==FALSE){
-  install.packages("monomvn")
-}
-library("monomvn")
-```
-
-```{r}
-benchmark(in_built(1), fast_gauss(1), replications = 1000)
-```
-
-```{r}
-# just example data
-set.seed(1233)
-X <- scale(matrix(rnorm(30),ncol=3))[,]
-set.seed(12333)
-Y <- matrix(rnorm(10, X%*%matrix(c(-0.2,0.5,1.5),ncol=1), sd=0.8),ncol=1)
-
-library(monomvn) 
-## Lasso regression
-reg.las <- regress(X, Y, method="lasso")
-
-## Bayesian Lasso regression
-reg.blas <- blasso(X, Y)
-```
+# parte 2 - Practica

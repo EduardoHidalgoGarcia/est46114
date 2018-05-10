@@ -1,26 +1,20 @@
 ---
-output: 
-  pdf_document:
-    citation_package: natbib
+title: Distribucion Gaussiana Multivariada
+subtitle: Semana 02
+author: Juan Carlos Martinez-Ovando
+institute: Division de Actuaria, Estadistica y Matematicas
+titlegraphic: /svm-sources/ITAM_2016.png
+fontsize: 10pt
+output:
+ ioslides_presentation:
+    smaller: true
+    logo: ~/svm-sources/ITAM_2016.png
+    css: ~/svm-sources/svm-ioslides-css.css    
+ beamer_presentation:
+    template: ~/svm-sources/svm-latex-beamer.tex
     keep_tex: true
-    fig_caption: true
-    latex_engine: pdflatex
-    template:  C:/Users/jcmo/Dropbox/svm-sources/svm-latex-ms.tex
-title: "S02 - Distribución Gaussiana Multivariada"
-#thanks: "Agradecimientos..."
-author: 
-- name: "Juan Carlos Martinez-Ovando"
-  affiliation: ITAM
-abstract: " "
-keywords: "Graphical models, text analytics, contingency tables."
-date: "`r format(Sys.time(), '%B %d, %Y')`"
-geometry: margin=1in
-fontfamily: mathpazo
-fontsize: 11pt
-# spacing: double
-#bibliography: C:/Users/jcmo/Dropbox/@BibTeX/ReferencesJCMO.bib
-#biblio-style: apsr
-endnote: no
+#toc: true
+    slide_level: 2
 ---
 
 ## Paquetes
@@ -264,14 +258,14 @@ for(i in 1:100){
                       mean=mu,sigma=sigma)
     }
 }
-png("C:/Users/jcmo/Google Drive/Material.Cursos/EST46114/Sesiones/est46114/figuras/contour_nula.png", 490, 490)
+png("contour_nula.png", 490, 490)
 contour(x.points,y.points,z)
 dev.off()
 ```
 
 ## Visualizacion
 
-![Contornos de distribucion gausiana.](C:/Users/jcmo/Google Drive/Material.Cursos/EST46114/Sesiones/est46114/figuras/contour_nula.png)
+![Contornos de distribucion gausiana.](contour_nula.png)
 
 ## Visualizacion
 ### Contornos
@@ -290,14 +284,14 @@ for(i in 1:100){
                       mean=mu,sigma=sigma)
     }
 }
-png("C:/Users/jcmo/Google Drive/Material.Cursos/EST46114/Sesiones/est46114/figuras/contour_positiva.png", 490, 490)
+png("contour_positiva.png", 490, 490)
 contour(x.points,y.points,z)
 dev.off()
 ```
 
 ## Visualizacion
 
-![Contornos de distribucion gausiana con covarianza positiva](C:/Users/jcmo/Google Drive/Material.Cursos/EST46114/Sesiones/est46114/figuras/contour_positiva.png)
+![Contornos de distribucion gausiana con covarianza positiva](contour_positiva.png)
 
 ## Visualizacion
 ### Contornos
@@ -316,14 +310,14 @@ for(i in 1:100){
                       mean=mu,sigma=sigma)
     }
 }
-png("C:/Users/jcmo/Google Drive/Material.Cursos/EST46114/Sesiones/est46114/figuras/contour_negativa.png", 490, 490)
+png("contour_negativa.png", 490, 490)
 contour(x.points,y.points,z)
 dev.off()
 ```
 
 ## Visualizacion
 
-![Contornos de distribucion gausiana con covarianza positiva](C:/Users/jcmo/Google Drive/Material.Cursos/EST46114/Sesiones/est46114/figuras/contour_negativa.png)
+![Contornos de distribucion gausiana con covarianza positiva](contour_negativa.png)
 
 # Parte 2 - Practica
 
@@ -331,7 +325,7 @@ dev.off()
 ## Exploracion 1:1
 
 ```{r summary, echo=TRUE}
-data01 <- read.csv(file="C:/Users/jcmo/Google Drive/Material.Cursos/EST46114/Sesiones/est46114/datos/est46114_semana02.csv",header=TRUE)
+data01 <- read.csv(file="est46114_semana02.csv",header=TRUE)
 summary(data01)
 X <- cbind(data01$X1,data01$X2)
 ```
@@ -353,10 +347,3 @@ l(\mu,\Sigma|\boldsymbol{x}_1,\ldots,\boldsymbol{x}_n) = \prod_{i}N(\boldsymbol{
 \propto |\Sigma|^{-n/2}\exp\left\{-\frac{1}{2}tr\left(\Sigma^{-1}(S+dd')\right)\right\},
 $$
 donde $d=\bar{x}-\mu$ y $S$ es la matriz de covarianzas muestral.
-
-## Verosimilitud
-
-### Computo
-
-
-La funcion de verosimilitud para $(\mu,\Sigma)$ condicional en un conjunto de 

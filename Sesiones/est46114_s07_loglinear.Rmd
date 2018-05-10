@@ -103,103 +103,21 @@ La devianza del modelo para tablas de contingencia se define como dos veces la v
 
 # Parte 2 - Practica
 
-Ilustraremos el materia anterior en R version 3.4.3 empleando los paquetes `gRbase` y `gRim`.
- 
-```{r eval=TRUE, include=FALSE}
-if(!require('devtools')){install.packages("devtools")}
-library("devtools")
+Ilustraremos el materia anterior en R version 3.4.4.
+
+```{r eval=FALSE, include=FALSE}
+#if(!require('graph')){install.packages("graph")}
+#library("graph")
+
+#if(!require('RBGL')){install.packages("RBGL")}
+#library("RBGL")
+
+if(!require('gRbase')){install.packages("gRbase")}
+library("gRbase")
+
+if(!require('gRim')){install.packages("gRim")}
+library("gRim")
 ```
-
-```{r}
-if(!require('graph')){
-  source("https://bioconductor.org/biocLite.R")
-  suppressMessages(biocLite("graph"))}
-suppressMessages(library("graph"))
-
-if(!require('Rgraphviz')){
-  source("https://bioconductor.org/biocLite.R")
-  suppressMessages(biocLite("Rgraphviz"))}
-suppressMessages(library("Rgraphviz"))
-
-if(!require('RBGL')){
-  source("https://bioconductor.org/biocLite.R")
-  suppressMessages(biocLite("RBGL"))}
-suppressMessages(library("RBGL"))
-
-if(!require('gRbase')){
-  suppressMessages(install.packages("gRbase"))}
-suppressMessages(library("gRbase"))
-
-if(!require('gRim')){
-  suppressMessages(install.packages("gRim"))}
-suppressMessages(library("gRim"))
-```
-
-En particular, estudiaremos los datos de un estudio de enfermedades coronarias de corazon. El numero de obseraciones es igual a $1,841$ individuos, para los que se registraron $6$ diferentes mediciones:
-
-a. fumador (o no) - `smoke`
-
-b. cansancio mental (o no) - `mental`
-
-c. cansancio fisico (o no) - `phys`
-
-d. presion arterial sistolica inferior a 140 mm (o no) - `systol`
-
-e. relacion de las lipoproteinas beta a alfa inferior a 3 unidades (o no) - `protein`
-
-f. antecedentes familiares de enfermedad coronaria (o no) - `family`.
-
-Los datos estan etiquetados como `y` si se cumple la condicion y como `n` en caso contrario.
-
-Asi, el problema esta conformado como una tabla de contingencia $6$-dimensional (tabla binaria, o tambien referida como una tabla de contingencia multi-imensional $2^{6}$).
-
-```{r}
-data(reinis)
-class(reinis)
-summary(reinis)
-plot(reinis)
-str(reinis)
-```
-
-El modelo con **factores independientes** o **efectos principales** (y cualquier modelo en general) se define como un objeto empleando la funcion `dmod()`, como se ilustra a continuacion.
-
-```{r}
-modelo.ind <- dmod(~smoke+mental+phys+systol+protein+family, data=reinis)
-modelo.ind
-plot(modelo.ind)
-```
-
-Definimos el **modelo saturado** ahora como  modelo como:
-
-```{r}
-modelo.sat <- dmod(~.^., data=reinis)
-modelo.sat
-plot(modelo.sat)
-```
-
-El modelo con **interacciones de orden $p$** es definido con `dmod()` de manera simplificada. El de orden $2$  se define como
-```{r}
-modelo.dos <- dmod(~.^2, data=reinis)
-modelo.dos
-```
-
-Y el modelo con **interacciones de orden $3$** se define como,
-```{r}
-modelo.tres <- dmod(~.^3, data=reinis)
-modelo.tres
-```
-
-La relevancia de las variantes de los modelos con interacciones se contrasta y determina empleando medidas para la comparacon y seleccion de modelos, como la `devianza`. Empleando tal medida, el **criterio de eleccion** consiste en privilegiar el modelo con la devianza mas pequena.
-
-Aunque en el caso de los datos de nefermedades coronarias de corazon no se manifiesta, es posible que los datos sean ralos (escazos) en algunas combinaciones de las tabals de contingencia. En ese caso, se ha recomendado en la literatura emplear una variacion de la `devianza`, conocida como `devianza de la independencia` o `ideviance`. Esta medida se define como dos vecesel cociente de la log-verosimilitud entre el *modelo de interes* y el *modelo con independencia absoluta*, i.e.
-$$
-iD = 2\sum_{i}n(i)log\left\{\frac{\widehat{m(i)}}{\prod_{v}n(i_v)}\right\}.
-$$
-
-**Nota I:** Los resultados mostrados hasta ahora suponen que el esquema de muestreo en la tabla de contingencia es *multinomial*. En la siguiente sesion revisaremos el caso donde el esquema de muestre supuesto es Poisson al interior de cada celda.
-
-**Nota II:** En el caso de los modelos basados en el *muestreo multinomial*, no es de interes estimar los parametros (probabilidades) de pertenencia a cada celda de la tabla de contingencia, sino estudiar las posibles interacciones entre las dimensiones que definen las tablas de contingencia mismas. Tales interacciones se contrastan a partir de definir vaiantes del modelo logistico. Asi, el *interes ultimo* es el de *contrastar diferentes interacciones* (i.e. contrastar diferentes modelos y elegir el mas adecuado).
-
 
 ---
 

@@ -1,26 +1,20 @@
 ---
-output: 
-  pdf_document:
-    citation_package: natbib
+title: Inferencia en la Distribucion Gaussiana Multivariada
+subtitle: Semana 03
+author: Juan Carlos Martinez-Ovando
+institute: Division de Actuaria, Estadistica y Matematicas
+titlegraphic: /svm-sources/ITAM_2016.png
+fontsize: 10pt
+output:
+ ioslides_presentation:
+    smaller: true
+    logo: ~/svm-sources/ITAM_2016.png
+    css: ~/svm-sources/svm-ioslides-css.css    
+ beamer_presentation:
+    template: ~/svm-sources/svm-latex-beamer.tex
     keep_tex: true
-    fig_caption: true
-    latex_engine: pdflatex
-    template:  C:/Users/jcmo/Dropbox/svm-sources/svm-latex-ms.tex
-title: "S03 - Distribucion Gaussiana (Inferencia)"
-#thanks: "Agradecimientos..."
-author: 
-- name: "Juan Carlos Martinez-Ovando"
-  affiliation: ITAM
-abstract: " "
-keywords: "Multivariate normal, maximum likelihood."
-date: "`r format(Sys.time(), '%B %d, %Y')`"
-geometry: margin=1in
-fontfamily: mathpazo
-fontsize: 11pt
-# spacing: double
-#bibliography: C:/Users/jcmo/Dropbox/@BibTeX/ReferencesJCMO.bib
-#biblio-style: apsr
-endnote: no
+#toc: true
+    slide_level: 2
 ---
 
 ## Paquetes
@@ -329,7 +323,7 @@ $$
 $$
 donde $\Sigma=\left(\sigma_{ij}\right)_{i,j=1}^{p}$.
 
-```{r}
+```
 limits <- sapply(diag(S), 
                 function(x) qinvgamma(c(.01, .99), 
                 shape = nu/2, scale = x/2))
@@ -337,7 +331,7 @@ limits <- sapply(diag(S),
 
 Podemos graficar las distribuciones marginales en la misma escala.
 
-```{r}
+```
 limits <- c(min(limits[1, ]), max(limits[2, ]))
 var <- seq(limits[1], limits[2], length = 501)
 density <- do.call('c',
