@@ -8,7 +8,23 @@ Temario [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Temario
 
 ## Sesiones
 
-* Grafos Probabilísticos y Análisis de Textos [Rmd](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s10_grafosprobabilisticos_textos.pdf) [PDF](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s10_grafosprobabilisticos_textos.pdf) [Datos](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s10_grafosprobabilisticos_textos.pdf)
+* Algebra matricial [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s00_matrixcookbook.pdf) 
+
+* Distribucion Gussiana Multidimensional [[Rmd]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s02_gaussianamultivariada.rmd) [[HTML]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s02_gaussianamultivariada.html) 
+
+* Inferencia Gaussiana Multidimensional [[Rmd]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s03_mle_gaussian.Rmd) [[HTML]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s03_mle_gaussian.html)
+
+* Componentes Principales [[Rmd]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s03_pca.Rmd) [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s03_pca.pdf)
+
+* Factores Latentes [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s04_algoritmo_bayesfactormodel.PDF) Referencia (distribucion gaussiana matricial) [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s04_Dawid1981.PDF)
+
+* Correlación Canónica [[Rmd]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s05_cca.Rmd) [[HTML]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s05_cca.html) [[CSV]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s05_cca.csv)
+
+* Clasificación Supervisada [[Rmd]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s06_probit_ssvs.Rmd) [[HTML]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s06_probit_ssvs.html) [[CSV]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s06_probit_ssvs.csv)
+
+* Factores Latentes (Algoritmo bayesiano) [[Rmd]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s04_bayes_fa.Rmd) [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s04_bayes_fa.PDF)
+
+* Grafos Probabilísticos y Análisis de Textos [[Rmd]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s10_grafosprobabilisticos_textos.pdf) [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s10_grafosprobabilisticos_textos.pdf) [[Datos]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s10_grafosprobabilisticos_textos.csv)
 
 * Modelos de Tópicos Latentes [[Rmd]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s12_graphicalmodels_lda.pdf) [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s12_graphicalmodels_lda.pdf)  
 
