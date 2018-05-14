@@ -6,21 +6,21 @@ output:
     fig_caption: true
     latex_engine: pdflatex
     template:  C:/Users/jcmo/Dropbox/svm-sources/svm-latex-ms.tex
-title: "S13 - Calsificacion no supervizada"
+title: "S13 - Clasificacion no supervizada"
 #thanks: "Agradecimientos..."
 author: 
 - name: "Juan Carlos Martinez-Ovando"
-  affiliation: ITAM
-  abstract: ""
-keywords: "Probabilistic graphical models, latent Dirichlet allocation, variational bayes."
+affiliation: ITAM
+abstract: "En la sesion de hoy revisaremos comparativamente dos metodos de clasificacion no supervisada (clustering) de datos escalares $d$-dimensionales. Revisaremos en detalle dos algoritmos para su implementacion."
+keywords: "Probabilistic graphical models, latent variables, extended likelihood, distace-based clustering."
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 geometry: margin=1in
 fontfamily: mathpazo
 fontsize: 11pt
-# spacing: double
+spacing: double
 #bibliography: C:/Users/jcmo/Dropbox/@BibTeX/ReferencesJCMO.bib
 #biblio-style: apsr
-endnote: no
+endnote: yes
 ---
 
 # Simulacion de datos
