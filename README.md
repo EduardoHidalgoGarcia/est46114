@@ -30,3 +30,4 @@ Temario [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Temario
 
 * Clasificación No Supervisada (dos enfoques) [[Rmd]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s13_unsupervisedclassification.pdf) [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s13_unsupervisedclassification.pdf)  
 
+* Kernel PCA(funcional) [[Rmd]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s14_kernelpca.pdf) [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s14_kernelpca.pdf)  Referencia adicional [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s14_kernelpca_wang2014.pdf)
