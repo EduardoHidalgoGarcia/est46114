@@ -1,0 +1,10 @@
+campo,descripcion,tipo
+region.id,Consecutivo de unidad de observacion,consecutivo
+casa.ant.med,Antigüedad media de las casas en la region,entero
+poblacion,Poblacion total en la region,entero
+casas.num,Numero de casas en la region,entero
+ingreso.med,ingreso medio en la region,real
+cuartos.prom,Numero promedio de cuartos en las viviendas,real
+habitaciones.prom,Numero promedio de habutaciones en las viviendas,real
+ocupantes.prom,Numero de ocupantes promedio por vivienda,real
+valor.med.log,Valor medio de la vivinda (escala logaritmica),real

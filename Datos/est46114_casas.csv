@@ -1,4 +1,4 @@
-region.id,casa.ant.med,poblacion,casas.num,ingreso.med,habitaciones.med,habitaciones.prom,ocupantes.prom,valor.med.log
+region.id,casa.ant.med,poblacion,casas.num,ingreso.med,cuartos.prom,habitaciones.prom,ocupantes.prom,valor.med.log
 1,41,322,126,8.3252,1.023809524,6.984126984,2.555555556,13.02276401
 2,21,2401,1138,8.3014,0.971880492,6.238137083,2.109841828,12.78968394
 3,52,496,177,7.2574,1.073446328,8.288135593,2.802259887,12.77167051
