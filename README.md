@@ -40,5 +40,5 @@ Temario [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Temario
 
 ## Examen Final
 
-* Lineamientos Parte I [[PDF]]((https://github.com/jcmartinezovando/est46114/blob/master/Examen/est46114_2018a_examenfinal.pdf)
+* Lineamientos Parte I [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Examen/est46114_2018a_examenfinal.pdf)
 
