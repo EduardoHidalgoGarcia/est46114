@@ -6,7 +6,7 @@ edad,Edad del prestatario en años,entero
 atrasos.numero.3059d,"Número de veces que el prestatario ha estado 30-59 días atrasado, pero no ha empeorado en los últimos 2 años.",entero
 deuda.proporcion,"Pagos mensuales de la deuda, pensión alimenticia, costos de vida divididos por el ingreso bruto mensual",porcentaje
 ingreso.mensual,Ingreso mensual,real
-perstamos.numero,"Número de préstamos abiertos (cuotas como préstamos o hipotecas para automóviles) y líneas de crédito (por ejemplo, tarjetas de crédito)",entero
+prestamos.numero,"Número de préstamos abiertos (cuotas como préstamos o hipotecas para automóviles) y líneas de crédito (por ejemplo, tarjetas de crédito)",entero
 retrasos.numero,Número de veces que el prestatario ha estado atrasado 90 días o más.,entero
 prestamos.hipoteca.numero,"Número de préstamos hipotecarios e inmobiliarios, incluidas líneas de crédito con garantía hipotecaria",entero
 atrasos.numero.6089d,"Cantidad de veces que el prestatario ha estado atrasado 60-89 días, pero no ha empeorado en los últimos 2 años.",entero
