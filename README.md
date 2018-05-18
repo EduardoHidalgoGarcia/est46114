@@ -42,3 +42,4 @@ Temario [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Temario
 
 * Lineamientos Parte I [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Examen/est46114_2018a_examenfinal.pdf)
 
+En el folder [[Templete.RF]](https://github.com/jcmartinezovando/act11302/tree/master/Templete.RF) pueden descargar el archivo para elaborar el reporte final.
