@@ -32,9 +32,9 @@ Temario [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Temario
 
 * Kernel PCA(funcional) [[Rmd]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s14_kernelpca.pdf) [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s14_kernelpca.pdf)  Referencia adicional [[PDF]](https://github.com/jcmartinezovando/est46114/blob/master/Sesiones/est46114_s14_kernelpca_wang2014.pdf)
 
-*
+* Arreglos y operadores multilineales
 
-*
+* SVD sobre tensores
 
 ---
 
