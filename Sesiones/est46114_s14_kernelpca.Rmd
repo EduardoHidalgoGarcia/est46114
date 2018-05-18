@@ -203,7 +203,7 @@ $$
 
 * Procesamiento de audio
 
-En `R` se pueden encontrar varias implementaciones confiables en el paquete ``kernlab`.
+En `R` se pueden encontrar varias implementaciones confiables en el paquete `kernlab`.
 
 **Observacion:** Casi todos los procedimientoes vistos en este curso donde se emplea el producto interior euclidiano pueden modificarse para definirse en terminos de *kernels*. Regresion es un ejemplo, derivando en modelos de expansiones de bases de kernels. Eso lo veremos en la siguiente semana.
 
